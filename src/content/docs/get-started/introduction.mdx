@@ -1,0 +1,24 @@
+---
+title: Introduction
+description: What KaUI is, why it exists, and how it fits into your shadcn/ui workflow.
+---
+
+import { GITHUB_URL } from "astro:env/client";
+
+## What is KaUI?
+
+KaUI is a personal collection of components built on top of [shadcn/ui](https://ui.shadcn.com). It is **not** an npm package — it's a registry of components you add directly to your codebase using the shadcn CLI, the same way you already install shadcn primitives.
+
+Think of it as a set of add-ons that solve specific problems shadcn/ui's base components don't cover out of the box: async loading states, enhanced form patterns, richer data display, and more.
+
+## How it works
+
+Each component is distributed through the [shadcn registry protocol](https://ui.shadcn.com/docs/registry). When you run the `add` command, the CLI fetches the component source and drops it straight into your project — fully owned, fully editable, zero runtime dependency on KaUI.
+
+## Who is it for?
+
+Anyone already using shadcn/ui who wants a head start on common patterns without pulling in a heavier library. The components are opinionated by design; if a piece doesn't fit your needs exactly, the source is right there to modify.
+
+## Contributing
+
+This collection grows as new problems come up. If you spot a bug, have an idea, or want to request a component, open an issue or PR on the <a href={GITHUB_URL}>GitHub repository</a>.

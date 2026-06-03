@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "homepage": "KaUI Shadcn Registry",
+  "items": [
+    {
+      "name": "async-button",
+      "description": "handle ui shift, pre and after loading action with loading spinner",
+      "type": "registry:component",
+      "files": [
+        {
+          "path": "src/registry/base/async-button/components/async-button.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    }
+  ]
+}
