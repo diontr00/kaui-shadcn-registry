@@ -6,8 +6,17 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
+    "prebuild": "pnpm run build:registry",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "check": "astro check",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "build:registry": "node scripts/build-registry.mjs",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,astro,mdx,json,md}": "prettier --write"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.6",
@@ -24,6 +33,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.17.0",
+    "next-themes": "^0.4.6",
     "radix-ui": "^1.4.3",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
@@ -31,6 +41,7 @@
     "satori-html": "^0.3.2",
     "shadcn": "^4.8.3",
     "sharp": "^0.34.5",
+    "sonner": "^2.0.7",
     "starlight-theme-black": "^0.6.0",
     "tailwind-merge": "^3.6.0",
     "tailwindcss": "^4.3.0",
@@ -38,6 +49,12 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
+    "@commitlint/cli": "^21.0.2",
+    "@commitlint/config-conventional": "^21.0.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.7",
+    "prettier": "^3.8.3",
+    "prettier-plugin-astro": "^0.14.1",
     "typescript": "^6.0.3",
     "vite": "^6.3.6"
   },

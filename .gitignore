@@ -22,3 +22,5 @@ pnpm-debug.log*
 
 CLAUDE.md
 .claude
+
+.bash_history
