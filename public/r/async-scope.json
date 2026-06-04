@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "async-scope",
+  "type": "registry:component",
+  "description": "A coordination layer for async UI — decouple what fires an action from what reacts to it.",
+  "dependencies": ["lucide-react"],
+  "registryDependencies": [
+    "utils",
+    "button",
+    "http://localhost:4321/r/use-async.json"
+  ],
+  "files": [
+    {
+      "type": "registry:component",
+      "target": "components/ui/async-scope.tsx",
+      "path": "src/registry/base/async-scope/components/async-scope.tsx",
+      "content": "import {\n  createContext,\n  useContext,\n  type ComponentProps,\n  type PropsWithChildren,\n  type ReactNode,\n} from \"react\";\nimport {\n  useAsync,\n  type UseAsyncOptions,\n  type UseAsyncReturn,\n} from \"@/hooks/use-async\";\nimport { Button } from \"@/components/ui/button\";\nimport { Loader2 } from \"lucide-react\";\nimport { cn } from \"@/lib/utils\";\n\nconst AsyncScopeContext = createContext<UseAsyncReturn<\n  unknown,\n  unknown,\n  []\n> | null>(null);\n\nexport function useAsyncScope<\n  TData = unknown,\n  TError = unknown,\n>(): UseAsyncReturn<TData, TError, []> {\n  const ctx = useContext(AsyncScopeContext);\n  if (!ctx) throw new Error(\"useAsyncScope must be used within AsyncScope\");\n  return ctx as UseAsyncReturn<TData, TError, []>;\n}\n\nexport type AsyncScopeProps<TData = unknown, TError = unknown> =\n  PropsWithChildren & UseAsyncOptions<TData, TError, []>;\n\nexport function AsyncScope<TData = unknown, TError = unknown>({\n  children,\n  action,\n  onSuccess,\n  onError,\n  onSettled,\n}: AsyncScopeProps<TData, TError>) {\n  const state = useAsync<TData, TError, []>({\n    action,\n    onSuccess,\n    onError,\n    onSettled,\n  });\n\n  return (\n    <AsyncScopeContext.Provider value={state as UseAsyncReturn<unknown, unknown, []>}>\n      {children}\n    </AsyncScopeContext.Provider>\n  );\n}\n\nexport type AsyncTriggerProps = Omit<ComponentProps<typeof Button>, \"onClick\">;\n\nexport function AsyncTrigger({\n  children,\n  disabled,\n  ...props\n}: AsyncTriggerProps) {\n  const { isLoading, execute } = useAsyncScope();\n\n  return (\n    <Button {...props} disabled={disabled || isLoading} onClick={() => execute()}>\n      {children}\n    </Button>\n  );\n}\n\nexport type AsyncContentProps = PropsWithChildren & {\n  loadingFallback?: ReactNode;\n  className?: string;\n};\n\nexport function AsyncContent({\n  children,\n  loadingFallback,\n  className,\n}: AsyncContentProps) {\n  const { isLoading } = useAsyncScope();\n\n  return (\n    <div className=\"grid grid-cols-1 items-center justify-items-center\">\n      <div\n        className={cn(\n          \"col-start-1 col-end-2 row-start-1 row-end-2 w-full\",\n          isLoading ? \"invisible\" : \"visible\",\n          className,\n        )}\n      >\n        {children}\n      </div>\n      <div\n        className={cn(\n          \"col-start-1 col-end-2 row-start-1 row-end-2\",\n          isLoading ? \"visible\" : \"invisible\",\n        )}\n      >\n        {loadingFallback ?? <Loader2 className=\"size-6 animate-spin\" />}\n      </div>\n    </div>\n  );\n}\n"
+    }
+  ]
+}

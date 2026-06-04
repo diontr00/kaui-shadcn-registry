@@ -10,14 +10,14 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { type ComponentProps, type ReactNode, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
-  type AsyncActionProps,
-  type ButtonProps,
+  AsyncButton,
+  type AsyncButtonProps,
 } from "../../async-button/components/async-button";
-import { AsyncButton } from "../../async-button/components/async-button";
 
 interface ConfirmActionProps<TData = unknown, TError = unknown> extends Omit<
-  AsyncActionProps<TData, TError>,
+  AsyncButtonProps<TData, TError, []>,
   "title"
 > {
   trigger: ReactNode;
@@ -25,7 +25,7 @@ interface ConfirmActionProps<TData = unknown, TError = unknown> extends Omit<
   description?: ReactNode;
   cancelText?: ReactNode;
   confirmText?: ReactNode;
-  confirmVariant?: ButtonProps["variant"];
+  confirmVariant?: ComponentProps<typeof Button>["variant"];
   size?: ComponentProps<typeof AlertDialogContent>["size"];
   media?: ReactNode;
 }
@@ -64,8 +64,8 @@ export function ConfirmAction<TData = unknown, TError = unknown>({
             variant={confirmVariant}
             action={action}
             loadingText={loadingText ?? confirmText}
-            onSuccess={async (data) => {
-              await onSuccess?.(data);
+            onSuccess={(data, args) => {
+              onSuccess?.(data, args);
               setOpen(false);
             }}
             onError={onError}

@@ -1,7 +1,7 @@
 import { demos } from "@/data/globals";
 import { type AvailableDemo } from "@/data/types";
 import { Suspense, type PropsWithChildren } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsTrigger, TabsContent, TabsList } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Loader2Icon } from "lucide-react";
 

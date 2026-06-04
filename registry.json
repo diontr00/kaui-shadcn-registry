@@ -3,16 +3,42 @@
   "homepage": "KaUI Shadcn Registry",
   "items": [
     {
+      "name": "use-async",
+      "type": "registry:hook",
+      "description": "A hook that owns the async action lifecycle — loading state, success, error, and settled callbacks",
+      "files": [
+        {
+          "path": "src/registry/base/use-async/hooks/use-async.ts",
+          "type": "registry:hook",
+          "target": "hooks/use-async.ts"
+        }
+      ]
+    },
+    {
       "name": "async-button",
       "type": "registry:component",
       "description": "A button that performs async operations with a no-layout-shift loading state",
       "dependencies": ["lucide-react"],
-      "registryDependencies": ["utils", "button"],
+      "registryDependencies": ["utils", "button", "@kaui/use-async"],
       "files": [
         {
           "path": "src/registry/base/async-button/components/async-button.tsx",
           "type": "registry:component",
           "target": "components/ui/async-button.tsx"
+        }
+      ]
+    },
+    {
+      "name": "async-scope",
+      "type": "registry:component",
+      "description": "A coordination layer for async UI — decouple what fires an action from what reacts to it.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["utils", "button", "@kaui/use-async"],
+      "files": [
+        {
+          "path": "src/registry/base/async-scope/components/async-scope.tsx",
+          "type": "registry:component",
+          "target": "components/ui/async-scope.tsx"
         }
       ]
     },

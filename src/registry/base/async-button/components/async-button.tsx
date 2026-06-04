@@ -1,22 +1,22 @@
 import { Button } from "@/components/ui/button";
-import { type ComponentProps, type ReactNode, useState } from "react";
+import {
+  useAsync,
+  type UseAsyncOptions,
+} from "@/registry/base/use-async/hooks/use-async";
+import { type ComponentProps, type ReactNode } from "react";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export type ButtonProps = ComponentProps<typeof Button>;
+export type AsyncButtonProps<
+  TData,
+  TError,
+  TArgs extends unknown[] = [],
+> = Omit<ComponentProps<typeof Button>, "onClick"> &
+  UseAsyncOptions<TData, TError, TArgs> & {
+    loadingText?: ReactNode;
+  };
 
-export type AsyncActionProps<TData = unknown, TError = unknown> = Omit<
-  ButtonProps,
-  "onClick"
-> & {
-  action: () => Promise<TData> | TData;
-  loadingText?: ReactNode;
-  onSuccess?: (data?: TData) => void | Promise<void> | unknown;
-  onError?: (error?: TError) => void | Promise<void> | unknown;
-  onSettled?: () => void | Promise<void>;
-};
-
-export function AsyncButton<TData = unknown, TError = unknown>({
+export function AsyncButton<TData, TError, TArgs extends unknown[] = []>({
   action,
   loadingText,
   onSuccess,
@@ -26,32 +26,21 @@ export function AsyncButton<TData = unknown, TError = unknown>({
   disabled,
   className,
   ...props
-}: AsyncActionProps<TData, TError>) {
-  const [isLoading, setIsLoading] = useState(false);
+}: AsyncButtonProps<TData, TError, TArgs>) {
+  const { isLoading, execute } = useAsync({
+    action,
+    onSuccess,
+    onError,
+    onSettled,
+  });
 
   const resolvedLoadingText = loadingText ?? children;
-
-  const handleExecute = async (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (props.type !== "submit") event.preventDefault();
-    if (isLoading) return;
-
-    setIsLoading(true);
-    try {
-      const data = await action();
-      await onSuccess?.(data);
-    } catch (error) {
-      await onError?.(error as TError);
-    } finally {
-      setIsLoading(false);
-      await onSettled?.();
-    }
-  };
 
   return (
     <Button
       {...props}
       disabled={disabled || isLoading}
-      onClick={handleExecute}
+      onClick={() => (execute as () => Promise<TData>)()}
       className={cn("grid grid-cols-1 place-items-center", className)}
     >
       <div
