@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "confirm-action",
+  "type": "registry:component",
+  "description": "A confirmation dialog that wraps an async action with loading state",
+  "registryDependencies": [
+    "alert-dialog",
+    "http://localhost:4321/r/async-button.json"
+  ],
+  "files": [
+    {
+      "type": "registry:component",
+      "target": "components/ui/confirm-action.tsx",
+      "path": "src/registry/base/confirm-action/components/confirm-action.tsx",
+      "content": "import {\n  AlertDialog,\n  AlertDialogCancel,\n  AlertDialogContent,\n  AlertDialogDescription,\n  AlertDialogFooter,\n  AlertDialogHeader,\n  AlertDialogMedia,\n  AlertDialogTitle,\n  AlertDialogTrigger,\n} from \"@/components/ui/alert-dialog\";\nimport { type ComponentProps, type ReactNode, useState } from \"react\";\nimport {\n  type AsyncActionProps,\n  type ButtonProps,\n} from \"@/components/ui/async-button\";\nimport { AsyncButton } from \"@/components/ui/async-button\";\n\ninterface ConfirmActionProps<TData = unknown, TError = unknown>\n  extends Omit<AsyncActionProps<TData, TError>, \"title\"> {\n  trigger: ReactNode;\n  title?: ReactNode;\n  description?: ReactNode;\n  cancelText?: ReactNode;\n  confirmText?: ReactNode;\n  confirmVariant?: ButtonProps[\"variant\"];\n  size?: ComponentProps<typeof AlertDialogContent>[\"size\"];\n  media?: ReactNode;\n}\n\nexport function ConfirmAction<TData = unknown, TError = unknown>({\n  trigger,\n  action,\n  title = \"Are you sure?\",\n  description = \"This action cannot be undone.\",\n  cancelText = \"Cancel\",\n  confirmText = \"Continue\",\n  confirmVariant = \"default\",\n  size,\n  media,\n  loadingText,\n  onSuccess,\n  onError,\n  onSettled,\n}: ConfirmActionProps<TData, TError>) {\n  const [open, setOpen] = useState(false);\n\n  return (\n    <AlertDialog open={open} onOpenChange={setOpen}>\n      <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>\n\n      <AlertDialogContent size={size}>\n        <AlertDialogHeader>\n          {media && <AlertDialogMedia>{media}</AlertDialogMedia>}\n          <AlertDialogTitle>{title}</AlertDialogTitle>\n          <AlertDialogDescription>{description}</AlertDialogDescription>\n        </AlertDialogHeader>\n\n        <AlertDialogFooter>\n          <AlertDialogCancel>{cancelText}</AlertDialogCancel>\n          <AsyncButton\n            variant={confirmVariant}\n            action={action}\n            loadingText={loadingText ?? confirmText}\n            onSuccess={async (data) => {\n              await onSuccess?.(data);\n              setOpen(false);\n            }}\n            onError={onError}\n            onSettled={onSettled}\n          >\n            {confirmText}\n          </AsyncButton>\n        </AlertDialogFooter>\n      </AlertDialogContent>\n    </AlertDialog>\n  );\n}\n"
+    }
+  ]
+}

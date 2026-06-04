@@ -4,12 +4,28 @@
   "items": [
     {
       "name": "async-button",
-      "description": "handle ui shift, pre and after loading action with loading spinner",
       "type": "registry:component",
+      "description": "A button that performs async operations with a no-layout-shift loading state",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["utils", "button"],
       "files": [
         {
           "path": "src/registry/base/async-button/components/async-button.tsx",
-          "type": "registry:ui"
+          "type": "registry:component",
+          "target": "components/ui/async-button.tsx"
+        }
+      ]
+    },
+    {
+      "name": "confirm-action",
+      "type": "registry:component",
+      "description": "A confirmation dialog that wraps an async action with loading state",
+      "registryDependencies": ["alert-dialog", "@kaui/async-button"],
+      "files": [
+        {
+          "path": "src/registry/base/confirm-action/components/confirm-action.tsx",
+          "type": "registry:component",
+          "target": "components/ui/confirm-action.tsx"
         }
       ]
     }
