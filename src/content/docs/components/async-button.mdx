@@ -1,0 +1,82 @@
+---
+title: Async Button
+description: A button that performs async operations with a no-layout-shift loading state.
+---
+
+import CodePreview from "@/components/markdown/code-preview/code-preview.astro";
+import Installation from "@/components/markdown/installation-tabs/installation-tabs.astro";
+import ToastProvider from "@/components/markdown/toast-provider.astro";
+
+<ToastProvider />
+
+<CodePreview demo="async-button/basic" />
+
+## Installation
+
+<Installation item="async-button" />
+
+## Usage
+
+```tsx
+import { AsyncButton } from "@/components/ui/async-button";
+```
+
+```tsx
+import { addToCart } from "@/actions/cart";
+import { toast } from "sonner";
+
+<AsyncButton
+  action={() => addToCart({ inCart: true })}
+  onSuccess={() => toast.success("Added to cart!")}
+  onError={() => toast.error("Something went wrong.")}
+>
+  Add to Cart
+</AsyncButton>;
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`action`</td>
+      <td>`() => Promise<TData> | TData`</td>
+      <td>—</td>
+      <td>The async function to run on click</td>
+    </tr>
+    <tr>
+      <td>`loadingText`</td>
+      <td>`ReactNode`</td>
+      <td>`children`</td>
+      <td>Content shown inside the button while loading</td>
+    </tr>
+    <tr>
+      <td>`onSuccess`</td>
+      <td>`(data?: TData) => void`</td>
+      <td>—</td>
+      <td>Called after `action` resolves</td>
+    </tr>
+    <tr>
+      <td>`onError`</td>
+      <td>`(error?: TError) => void`</td>
+      <td>—</td>
+      <td>Called if `action` throws</td>
+    </tr>
+    <tr>
+      <td>`onSettled`</td>
+      <td>`() => void`</td>
+      <td>—</td>
+      <td>Called after either success or error</td>
+    </tr>
+  </tbody>
+</table>
+
+All other `Button` props are forwarded.

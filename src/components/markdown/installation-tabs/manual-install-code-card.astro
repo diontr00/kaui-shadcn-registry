@@ -1,0 +1,9 @@
+---
+type Props = { filePath: string };
+const { filePath } = Astro.props;
+---
+
+<div class="flex flex-col gap-2 not-content">
+  <p class="font-mono text-xs text-muted-foreground">{filePath}</p>
+  <slot />
+</div>

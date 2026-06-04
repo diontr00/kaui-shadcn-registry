@@ -1,26 +1,24 @@
 ---
 title: Installation
-description: A quick guide on how to get KaUI Shadcn components up and running in your project!
+description: How to add KaUI components to your project using the shadcn CLI.
 ---
 
 import CliCommandCode from "@/components/markdown/cli-command-code/cli-command-code.astro";
 import { URL } from "astro:env/client";
 
-Hey there! Honestly, getting these components into your codebase is super straightforward, no matter what framework or package manager you happen to be working with.
+KaUI components are installed the same way as any shadcn component — using the `shadcn` CLI. No extra setup needed if you already have shadcn/ui configured.
 
-Everything is handled beautifully by the official `shadcn` CLI tool. It works exactly like the standard Shadcn setup you're probably already used to—all you have to do is run the `add` command and point it toward the component you want to try out!
+## Adding a component
 
-## Let's look at an example
-
-To grab something like the `async-button`, you can just open your terminal and run:
+Run the `add` command with the component name:
 
 <CliCommandCode action="run" command="shadcn@latest add @kaui/async-button" />
 
-### Having trouble?
+### Direct URL fallback
 
-Sometimes registries can be a little finicky depending on your local setup! If the short command above gives you any grief, you can bypass it completely by passing the direct link to the component's JSON configuration file instead:
+If the short registry name doesn't resolve on your setup, pass the component's direct JSON URL instead:
 
 <CliCommandCode
   action="run"
-  command={`shadcn@latest add ${URL}/r/action-button.json`}
+  command={`shadcn@latest add ${URL}/r/async-button.json`}
 />
