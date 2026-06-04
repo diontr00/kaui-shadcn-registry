@@ -27,9 +27,25 @@ export const demos = {
     () => import("@/registry/examples/async-button/basic"),
     "BasicAsyncButton",
   ),
-  "async-container/basic": lazyNamed(
-    () => import("@/registry/examples/async-container/basic"),
-    "BasicAsyncContainer",
+  "async-button/with-error": lazyNamed(
+    () => import("@/registry/examples/async-button/with-error"),
+    "AsyncButtonWithError",
+  ),
+  "async-scope/basic": lazyNamed(
+    () => import("@/registry/examples/async-scope/basic"),
+    "BasicAsyncScope",
+  ),
+  "async-scope/multi-content": lazyNamed(
+    () => import("@/registry/examples/async-scope/multi-content"),
+    "MultiContentAsyncScope",
+  ),
+  "async-scope/error-retry": lazyNamed(
+    () => import("@/registry/examples/async-scope/error-retry"),
+    "ErrorRetryAsyncScope",
+  ),
+  "async-scope/with-status": lazyNamed(
+    () => import("@/registry/examples/async-scope/with-status"),
+    "WithStatusAsyncScope",
   ),
   "confirm-action/basic": lazyNamed(
     () => import("@/registry/examples/confirm-action/basic"),

@@ -27,6 +27,14 @@ function transformImports(content) {
     .replace(
       /from "\.\.\/\.\.\/([a-z-]+)\/components\/\1"/g,
       (_, name) => `from "@/components/ui/${name}"`,
+    )
+    .replace(
+      /from "@\/registry\/base\/([a-z-]+)\/hooks\/([a-z-]+)"/g,
+      (_, _folder, hook) => `from "@/hooks/${hook}"`,
+    )
+    .replace(
+      /from "\.\.\/\.\.\/([a-z-]+)\/hooks\/([a-z-]+)"/g,
+      (_, _folder, hook) => `from "@/hooks/${hook}"`,
     );
 }
 

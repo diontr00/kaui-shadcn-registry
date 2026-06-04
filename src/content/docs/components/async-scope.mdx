@@ -1,0 +1,254 @@
+---
+title: Async Scope
+description: A coordination layer for async UI , decouple what fires an action from what reacts to it.
+sidebar:
+  order: 1
+---
+
+import CodePreview from "@/components/markdown/code-preview/code-preview.astro";
+import Installation from "@/components/markdown/installation-tabs/installation-tabs.astro";
+import ToastProvider from "@/components/markdown/toast-provider.astro";
+
+<ToastProvider />
+
+<CodePreview demo="async-scope/multi-content" />
+
+## Installation
+
+<Installation item="async-scope" />
+
+## Usage
+
+```tsx
+import {
+  AsyncScope,
+  AsyncContent,
+  AsyncTrigger,
+  useAsyncScope,
+} from "@/components/ui/async-scope";
+```
+
+```tsx
+<AsyncScope action={syncData} onSuccess={() => toast.success("Synced")}>
+  <AsyncTrigger>Sync</AsyncTrigger>
+  <AsyncContent>
+    <YourCard />
+  </AsyncContent>
+</AsyncScope>
+```
+
+## Examples
+
+### Single area
+
+<CodePreview demo="async-scope/basic" />
+
+### Error & Retry
+
+`useAsyncScope` gives child components direct access to the full async state — including `isError`, `reset`, and `execute`. This example uses all three to build a self-contained retry flow inside the card itself. The trigger is disabled during the retry so the user can't fire duplicate requests.
+
+<CodePreview demo="async-scope/error-retry" />
+
+### Status indicator
+
+Any component inside `AsyncScope` can subscribe to state — not just `AsyncContent`. Here a status badge lives outside the card entirely, reacting to `isIdle → isLoading → isSuccess | isError` without being part of the loading area.
+
+<CodePreview demo="async-scope/with-status" />
+
+## Building custom consumers
+
+`useAsyncScope` is the escape hatch. Use it when `AsyncTrigger` and `AsyncContent` aren't expressive enough.
+
+```tsx
+function RetryButton() {
+  const { isError, execute, reset } = useAsyncScope();
+  if (!isError) return null;
+
+  return (
+    <Button
+      variant="destructive"
+      onClick={() => {
+        reset();
+        execute();
+      }}
+    >
+      Retry
+    </Button>
+  );
+}
+```
+
+```tsx
+function SuccessBanner() {
+  const { isSuccess, data } = useAsyncScope<{ syncedAt: string }>();
+  if (!isSuccess) return null;
+
+  return (
+    <p className="text-xs text-emerald-500">
+      Last synced {new Date(data.syncedAt).toLocaleTimeString()}
+    </p>
+  );
+}
+```
+
+## How it fits in your stack
+
+Most apps have three distinct concerns when handling an async action. `AsyncScope` owns exactly one of them.
+
+```
+┌──────────────────────────────────────────────────────┐
+│  Data layer — TanStack Query, SWR, tRPC, fetch       │
+│  Owns: caching, deduplication, background refetch    │
+├──────────────────────────────────────────────────────┤
+│  State machine — useAsync                            │
+│  Owns: loading state, race protection, callbacks     │
+├──────────────────────────────────────────────────────┤
+│  Coordination layer — AsyncScope           ← this    │
+│  Owns: broadcasting state to the component tree      │
+├──────────────────────────────────────────────────────┤
+│  UI primitives — AsyncTrigger, AsyncContent          │
+│  Owns: rendering each state (idle/loading/error)     │
+└──────────────────────────────────────────────────────┘
+```
+
+**`AsyncScope` is not a replacement for your data library.** It is a UI coordination layer — its only job is to take the result of an `action` and make the async state available to any component in its subtree. No caching, no deduplication, no background refetch.
+
+That means they compose. If you already use TanStack Query, pass `mutation.mutateAsync` as the `action`. TanStack Query owns the data layer; `AsyncScope` owns the coordination:
+
+```tsx
+const mutation = useMutation({ mutationFn: syncAccount });
+
+<AsyncScope action={mutation.mutateAsync}>
+  <AsyncTrigger>Sync</AsyncTrigger>
+  <AsyncContent>
+    <AccountCard />
+  </AsyncContent>
+</AsyncScope>;
+```
+
+If you don't have a data library, `useAsync` (the built-in state machine) handles the execution. Either way, `AsyncScope`'s API doesn't change.
+
+## When to use
+
+<table>
+  <thead>
+    <tr>
+      <th align="left">Component</th>
+      <th align="left">Use when</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`AsyncButton`</td>
+      <td>
+        The button itself is the loading indicator — self-contained, no outside
+        coordination needed
+      </td>
+    </tr>
+    <tr>
+      <td>`AsyncScope`</td>
+      <td>
+        The trigger and the loading area are different elements, or multiple
+        areas update from one action
+      </td>
+    </tr>
+    <tr>
+      <td>`useAsync`</td>
+      <td>You need the raw state machine with no opinion on rendering</td>
+    </tr>
+  </tbody>
+</table>
+
+## API
+
+### AsyncScope
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`action`</td>
+      <td>`() => Promise<TData> | TData`</td>
+      <td>—</td>
+      <td>The async function to execute when triggered</td>
+    </tr>
+    <tr>
+      <td>`onSuccess`</td>
+      <td>`(data: TData) => void`</td>
+      <td>—</td>
+      <td>Called after `action` resolves</td>
+    </tr>
+    <tr>
+      <td>`onError`</td>
+      <td>`(error: TError) => void`</td>
+      <td>—</td>
+      <td>Called if `action` throws</td>
+    </tr>
+    <tr>
+      <td>`onSettled`</td>
+      <td>`(data, error) => void`</td>
+      <td>—</td>
+      <td>Called after either outcome</td>
+    </tr>
+  </tbody>
+</table>
+
+### AsyncTrigger
+
+All `Button` props except `onClick`. Automatically disabled while the scope is loading.
+
+### AsyncContent
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`loadingFallback`</td>
+      <td>`ReactNode`</td>
+      <td>
+        `<Loader2 />`
+      </td>
+      <td>Shown in place of children while loading</td>
+    </tr>
+    <tr>
+      <td>`className`</td>
+      <td>`string`</td>
+      <td>—</td>
+      <td>Applied to the visible content wrapper</td>
+    </tr>
+  </tbody>
+</table>
+
+### useAsyncScope
+
+```ts
+const {
+  // status flags
+  isIdle,
+  isLoading,
+  isSuccess,
+  isError,
+  // data
+  data,
+  error,
+  // actions
+  execute,
+  reset,
+} = useAsyncScope<TData, TError>();
+```
+
+Returns the full async state from the nearest `AsyncScope`. Pass generics to type `data` and `error`. Throws if called outside an `AsyncScope`.

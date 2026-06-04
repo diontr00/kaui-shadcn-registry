@@ -1,11 +1,20 @@
-export type AvailableComponent = "confirm-action" | "async-button";
+export type AvailableComponent =
+  | "use-async"
+  | "async-button"
+  | "async-scope"
+  | "confirm-action";
 
 export type AvailableDemo =
+  | "async-button/basic"
+  | "async-button/with-error"
+  | "async-scope/basic"
+  | "async-scope/multi-content"
+  | "async-scope/error-retry"
+  | "async-scope/with-status"
   | "confirm-action/basic"
   | "confirm-action/with-follow-up"
   | "confirm-action/error"
-  | "confirm-action/require-confirm"
-  | "async-button/basic";
+  | "confirm-action/require-confirm";
 
 export type RegistryFileType =
   | "registry:lib"

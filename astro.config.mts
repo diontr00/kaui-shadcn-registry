@@ -51,12 +51,12 @@ export default defineConfig({
 
       plugins: [
         starlightThemeBlack({
-          navLinks: [
-            {
-              label: "Docs",
-              link: "/getting-started",
-            },
-          ],
+          // navLinks: [
+          //   {
+          //     label: "Docs",
+          //     link: "/components/async-scope",
+          //   },
+          // ],
           footerText: `Built & designed by [Khanh Anh Trinh](https://khanhanhtr.com). The source code is available on [GitHub](${GITHUB_URL}).`,
         }),
       ],

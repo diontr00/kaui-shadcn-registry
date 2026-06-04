@@ -15,9 +15,9 @@ export function WithFollowUpConfirmAction() {
       description="Archived items can be restored later from your archive."
       confirmText="Archive"
       action={archiveItem}
-      onSuccess={(data) =>
+      onSuccess={(data: { archivedAt: string }) =>
         toast.success("Archived", {
-          description: `Archived at ${new Date(data!.archivedAt).toLocaleTimeString()}`,
+          description: `Archived at ${new Date(data.archivedAt).toLocaleTimeString()}`,
         })
       }
     />

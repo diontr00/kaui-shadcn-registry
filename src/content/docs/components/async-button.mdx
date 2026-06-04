@@ -1,6 +1,8 @@
 ---
 title: Async Button
 description: A button that performs async operations with a no-layout-shift loading state.
+sidebar:
+  order: 2
 ---
 
 import CodePreview from "@/components/markdown/code-preview/code-preview.astro";
@@ -33,6 +35,12 @@ import { toast } from "sonner";
   Add to Cart
 </AsyncButton>;
 ```
+
+## Examples
+
+### Destructive With Error
+
+<CodePreview demo="async-button/with-error" />
 
 ## Props
 
