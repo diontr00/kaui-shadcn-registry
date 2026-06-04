@@ -1,5 +1,5 @@
 import { lazy, type ComponentType, type LazyExoticComponent } from "react";
-import type { AvailableComponent, AvailableDemo } from "./types";
+import type { AvailableDemo } from "./types";
 
 function lazyNamed<
   TModule extends Record<string, unknown>,
@@ -22,13 +22,14 @@ function lazyNamed<
   });
 }
 
-export const demos: Record<
-  AvailableDemo,
-  LazyExoticComponent<ComponentType<any>>
-> = {
+export const demos = {
   "async-button/basic": lazyNamed(
     () => import("@/registry/examples/async-button/basic"),
     "BasicAsyncButton",
+  ),
+  "async-container/basic": lazyNamed(
+    () => import("@/registry/examples/async-container/basic"),
+    "BasicAsyncContainer",
   ),
   "confirm-action/basic": lazyNamed(
     () => import("@/registry/examples/confirm-action/basic"),
@@ -46,6 +47,4 @@ export const demos: Record<
     () => import("@/registry/examples/confirm-action/require-confirm"),
     "RequireConfirmAction",
   ),
-} as const;
-
-export type { AvailableComponent, AvailableDemo };
+} satisfies Record<AvailableDemo, LazyExoticComponent<ComponentType<any>>>;
