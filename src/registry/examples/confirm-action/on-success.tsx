@@ -10,7 +10,6 @@ const archiveItem = async (): Promise<{ archivedAt: string }> => {
 export function WithFollowUpConfirmAction() {
   return (
     <ConfirmAction
-      trigger={<Button variant="outline">Archive item</Button>}
       title="Archive this item?"
       description="Archived items can be restored later from your archive."
       confirmText="Archive"
@@ -20,6 +19,8 @@ export function WithFollowUpConfirmAction() {
           description: `Archived at ${new Date(data.archivedAt).toLocaleTimeString()}`,
         })
       }
-    />
+    >
+      <Button variant="outline">Archive item</Button>
+    </ConfirmAction>
   );
 }

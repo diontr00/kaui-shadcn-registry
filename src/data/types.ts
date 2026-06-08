@@ -12,9 +12,10 @@ export type AvailableDemo =
   | "async-scope/error-retry"
   | "async-scope/with-status"
   | "confirm-action/basic"
-  | "confirm-action/with-follow-up"
-  | "confirm-action/error"
-  | "confirm-action/require-confirm";
+  | "confirm-action/on-success"
+  | "confirm-action/on-error"
+  | "confirm-action/custom-trigger"
+  | "confirm-action/with-media";
 
 export type RegistryFileType =
   | "registry:lib"

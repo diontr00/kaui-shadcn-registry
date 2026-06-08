@@ -10,7 +10,6 @@ const failingAction = async () => {
 export function ErrorConfirmAction() {
   return (
     <ConfirmAction
-      trigger={<Button variant="destructive">Trigger error</Button>}
       title="This will fail"
       description="This example demonstrates how ConfirmAction handles errors gracefully."
       confirmText="Proceed anyway"
@@ -18,6 +17,8 @@ export function ErrorConfirmAction() {
       action={failingAction}
       onSuccess={() => toast.success("Done.")}
       onError={() => toast.error("Action failed. Please try again.")}
-    />
+    >
+      <Button variant="destructive">Trigger error</Button>
+    </ConfirmAction>
   );
 }
