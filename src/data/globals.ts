@@ -51,16 +51,21 @@ export const demos = {
     () => import("@/registry/examples/confirm-action/basic"),
     "BasicConfirmAction",
   ),
-  "confirm-action/with-follow-up": lazyNamed(
-    () => import("@/registry/examples/confirm-action/with-follow-up"),
+  "confirm-action/on-success": lazyNamed(
+    () => import("@/registry/examples/confirm-action/on-success"),
     "WithFollowUpConfirmAction",
   ),
-  "confirm-action/error": lazyNamed(
-    () => import("@/registry/examples/confirm-action/error"),
+  "confirm-action/on-error": lazyNamed(
+    () => import("@/registry/examples/confirm-action/on-error"),
     "ErrorConfirmAction",
   ),
-  "confirm-action/require-confirm": lazyNamed(
-    () => import("@/registry/examples/confirm-action/require-confirm"),
-    "RequireConfirmAction",
+
+  "confirm-action/custom-trigger": lazyNamed(
+    () => import("@/registry/examples/confirm-action/custom-trigger"),
+    "CustomTriggerConfirmAction",
+  ),
+  "confirm-action/with-media": lazyNamed(
+    () => import("@/registry/examples/confirm-action/with-media"),
+    "WithMediaConfirmAction",
   ),
 } satisfies Record<AvailableDemo, LazyExoticComponent<ComponentType<any>>>;

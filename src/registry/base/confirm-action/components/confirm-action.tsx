@@ -20,7 +20,6 @@ interface ConfirmActionProps<TData = unknown, TError = unknown> extends Omit<
   AsyncButtonProps<TData, TError, []>,
   "title"
 > {
-  trigger: ReactNode;
   title?: ReactNode;
   description?: ReactNode;
   cancelText?: ReactNode;
@@ -28,10 +27,10 @@ interface ConfirmActionProps<TData = unknown, TError = unknown> extends Omit<
   confirmVariant?: ComponentProps<typeof Button>["variant"];
   size?: ComponentProps<typeof AlertDialogContent>["size"];
   media?: ReactNode;
+  children: ReactNode;
 }
 
 export function ConfirmAction<TData = unknown, TError = unknown>({
-  trigger,
   action,
   title = "Are you sure?",
   description = "This action cannot be undone.",
@@ -44,12 +43,13 @@ export function ConfirmAction<TData = unknown, TError = unknown>({
   onSuccess,
   onError,
   onSettled,
+  children,
 }: ConfirmActionProps<TData, TError>) {
   const [open, setOpen] = useState(false);
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
-      <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
+      <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
 
       <AlertDialogContent size={size}>
         <AlertDialogHeader>

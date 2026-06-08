@@ -1,0 +1,158 @@
+---
+title: Confirm Action
+description: Guards irreversible actions behind a confirm dialog — with built-in async loading state on the confirm button.
+sidebar:
+  order: 3
+---
+
+import CodePreview from "@/components/markdown/code-preview/code-preview.astro";
+import Installation from "@/components/markdown/installation-tabs/installation-tabs.astro";
+import ToastProvider from "@/components/markdown/toast-provider.astro";
+
+<ToastProvider />
+
+<CodePreview demo="confirm-action/basic" />
+
+## Installation
+
+<Installation item="confirm-action" />
+
+## Usage
+
+```tsx
+import { ConfirmAction } from "@/components/ui/confirm-action";
+```
+
+```tsx
+<ConfirmAction
+  title="Delete item?"
+  description="This action cannot be undone."
+  confirmText="Delete"
+  confirmVariant="destructive"
+  action={deleteItem}
+  onSuccess={() => toast.success("Deleted")}
+>
+  <Button variant="destructive">Delete</Button>
+</ConfirmAction>
+```
+
+The child element becomes the dialog trigger. Any clickable element works — a button, an icon, a menu item.
+
+## Examples
+
+### Custom Trigger
+
+The trigger can be anything. Here a ghost trash icon appears on row hover — invisible until the user signals intent, then confirms before the action runs.
+
+<CodePreview demo="confirm-action/custom-trigger" />
+
+### With Media
+
+Pass any icon or image to `media` to give the dialog visual context. The icon renders in a muted tile beside the title, making the dialog feel grounded in the action it's describing.
+
+<CodePreview demo="confirm-action/with-media" />
+
+### On Success
+
+Use `onSuccess` to access the data returned by `action` — useful for showing a confirmation message with context from the server response.
+
+<CodePreview demo="confirm-action/on-success" />
+
+### On Error
+
+`onError` fires if `action` throws. The dialog stays open so the user can try again without re-triggering the confirmation flow.
+
+<CodePreview demo="confirm-action/on-error" />
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`children`</td>
+      <td>`ReactNode`</td>
+      <td>—</td>
+      <td>The trigger element that opens the dialog</td>
+    </tr>
+    <tr>
+      <td>`action`</td>
+      <td>`() => Promise<TData> | TData`</td>
+      <td>—</td>
+      <td>Async function executed when the user confirms</td>
+    </tr>
+    <tr>
+      <td>`title`</td>
+      <td>`ReactNode`</td>
+      <td>`"Are you sure?"`</td>
+      <td>Dialog heading</td>
+    </tr>
+    <tr>
+      <td>`description`</td>
+      <td>`ReactNode`</td>
+      <td>`"This action cannot be undone."`</td>
+      <td>Dialog body text</td>
+    </tr>
+    <tr>
+      <td>`confirmText`</td>
+      <td>`ReactNode`</td>
+      <td>`"Continue"`</td>
+      <td>Label for the confirm button</td>
+    </tr>
+    <tr>
+      <td>`cancelText`</td>
+      <td>`ReactNode`</td>
+      <td>`"Cancel"`</td>
+      <td>Label for the cancel button</td>
+    </tr>
+    <tr>
+      <td>`confirmVariant`</td>
+      <td>Button variant</td>
+      <td>`"default"`</td>
+      <td>Visual style of the confirm button</td>
+    </tr>
+    <tr>
+      <td>`loadingText`</td>
+      <td>`ReactNode`</td>
+      <td>`confirmText`</td>
+      <td>Text shown on the confirm button while the action runs</td>
+    </tr>
+    <tr>
+      <td>`media`</td>
+      <td>`ReactNode`</td>
+      <td>—</td>
+      <td>Icon or image rendered above the title inside the dialog</td>
+    </tr>
+    <tr>
+      <td>`size`</td>
+      <td>`"default" | "sm"`</td>
+      <td>—</td>
+      <td>Controls dialog width</td>
+    </tr>
+    <tr>
+      <td>`onSuccess`</td>
+      <td>`(data: TData) => void`</td>
+      <td>—</td>
+      <td>Called after `action` resolves — receives the return value</td>
+    </tr>
+    <tr>
+      <td>`onError`</td>
+      <td>`(error: TError) => void`</td>
+      <td>—</td>
+      <td>Called if `action` throws</td>
+    </tr>
+    <tr>
+      <td>`onSettled`</td>
+      <td>`(data, error) => void`</td>
+      <td>—</td>
+      <td>Called after either outcome</td>
+    </tr>
+  </tbody>
+</table>
