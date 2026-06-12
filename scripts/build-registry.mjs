@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from "fs";
+import { mkdirSync, readFileSync, writeFileSync } from "fs";
 import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
 
@@ -37,6 +37,8 @@ function transformImports(content) {
       (_, _folder, hook) => `from "@/hooks/${hook}"`,
     );
 }
+
+mkdirSync(resolve(root, "public/r"), { recursive: true });
 
 let built = 0;
 
