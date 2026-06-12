@@ -1,49 +1,43 @@
-# Starlight Starter Kit: Basics
+# KaUI
 
-[![Built with Starlight](https://astro.badg.es/v2/built-with-starlight/tiny.svg)](https://starlight.astro.build)
+A personal collection of components that extend [shadcn/ui](https://ui.shadcn.com). Copy them, own them, ship them.
 
-```
-pnpm create astro@latest -- --template starlight
-```
+**Docs:** https://kaui-shadcn.vercel.app
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Install a component
 
-## 🚀 Project Structure
-
-Inside of your Astro + Starlight project, you'll see the following folders and files:
-
-```
-.
-├── public/
-├── src/
-│   ├── assets/
-│   ├── content/
-│   │   └── docs/
-│   └── content.config.ts
-├── astro.config.mjs
-├── package.json
-└── tsconfig.json
+```bash
+pnpm dlx shadcn@latest add https://kaui-shadcn.vercel.app/r/<name>.json
 ```
 
-Starlight looks for `.md` or `.mdx` files in the `src/content/docs/` directory. Each file is exposed as a route based on its file name.
+Or add the namespace once and use the short form:
 
-Images can be added to `src/assets/` and embedded in Markdown with a relative link.
+```bash
+pnpm dlx shadcn@latest registry add @kaui "https://kaui-shadcn.vercel.app/r/{name}.json"
+pnpm dlx shadcn@latest add @kaui/combobox
+```
 
-Static assets, like favicons, can be placed in the `public/` directory.
+## Components
 
-## 🧞 Commands
+| Name                   | Type      | Description                                                |
+| ---------------------- | --------- | ---------------------------------------------------------- |
+| `async-button`         | component | Button with built-in loading, success, and error state     |
+| `async-scope`          | component | Scope async state across a component tree                  |
+| `confirm-action`       | component | Wrap any trigger to require confirmation before executing  |
+| `combobox`             | component | Single-select with inline search and async loading support |
+| `multi-select`         | component | Multi-pick combobox with toggle-based selection            |
+| `use-async`            | hook      | Manage async lifecycle — loading, success, error, settled  |
+| `use-debounce`         | hook      | Stable debounce with no stale-closure risk                 |
+| `use-controlled-state` | hook      | Controlled/uncontrolled state bridge                       |
 
-All commands are run from the root of the project, from a terminal:
+## Development
 
-| Command                | Action                                           |
-| :--------------------- | :----------------------------------------------- |
-| `pnpm install`         | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
+```bash
+pnpm install
+pnpm dev        # starts dev server + regenerates registry JSON
+pnpm build      # type-check + build site + registry JSON
+```
 
-## 👀 Want to learn more?
+## License
 
-Check out [Starlight’s docs](https://starlight.astro.build/), read [the Astro documentation](https://docs.astro.build), or jump into the [Astro Discord server](https://astro.build/chat).
+MIT
