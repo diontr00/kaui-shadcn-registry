@@ -34,6 +34,11 @@ export type AsyncScopeProps<
   TError = unknown,
 > = PropsWithChildren & UseAsyncOptions<TData, TError, []>;
 
+/**
+ * A coordination layer of async UI , decouples what fires an action from what reacts to it
+ *
+ * required : `action`
+ */
 export function AsyncScope<TData = unknown, TError = unknown>({
   children,
   action,

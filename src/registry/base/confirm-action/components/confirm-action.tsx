@@ -30,6 +30,11 @@ interface ConfirmActionProps<TData = unknown, TError = unknown> extends Omit<
   children: ReactNode;
 }
 
+/**
+ * Guards inreversible actions behind a confirm dialog
+ *
+ * **Required:** `action`
+ */
 export function ConfirmAction<TData = unknown, TError = unknown>({
   action,
   title = "Are you sure?",

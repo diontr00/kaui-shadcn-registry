@@ -1,0 +1,184 @@
+---
+title: Combobox
+description: A single-select combobox with inline search, async loading support, and full controlled/uncontrolled API.
+sidebar:
+  order: 4
+---
+
+import CodePreview from "@/components/markdown/code-preview/code-preview.astro";
+import Installation from "@/components/markdown/installation-tabs/installation-tabs.astro";
+
+<CodePreview demo="combobox/basic" />
+
+## Installation
+
+<Installation item="combobox" />
+
+## Usage
+
+```tsx
+import { Combobox } from "@/components/ui/combobox";
+import type { SelectionOption } from "@/hooks/use-filtered-options";
+```
+
+```tsx
+const options: SelectionOption<string>[] = [
+  { value: "react", label: "React" },
+  { value: "vue", label: "Vue" },
+];
+
+<Combobox
+  items={options}
+  selected={selected}
+  onSelectedChange={setSelected}
+  placeholder="Search..."
+  closeAfterSelect
+/>;
+```
+
+Each option is `{ value: T, label: string, disabled?: boolean }`. The generic `T` extends `string` so you can keep values fully typed.
+
+## Examples
+
+### Input Addons
+
+Use `startAddon` and `endAddon` to embed any element inside the input — a search icon, a clear button, a status indicator. The slots are rendered inside `InputGroup` so they align and interact correctly with the text field.
+
+<CodePreview demo="combobox/with-addons" />
+
+### Async Search
+
+Wire `onQueryChange` to a debounced fetch, set `disableLocalFilter` so the component shows whatever you pass in `items`, and toggle `isLoading` while the request is in flight. The skeleton appears in place of the list until results arrive.
+
+<CodePreview demo="combobox/async-search" />
+
+### Custom Option Rendering
+
+Pass `renderOption` to take full control of how each item looks. Receives the option object and a boolean for selected state — use them to show icons, badges, or secondary text.
+
+<CodePreview demo="combobox/custom-render" />
+
+### Create New Option
+
+Use `emptyContent` with a controlled `query` to show an inline "Add" action when no results match. `onMouseDown` on the button prevents the input from blurring (which would close the dropdown before the click fires).
+
+<CodePreview demo="combobox/create-option" />
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`selected`</td>
+      <td>`SelectionOption<T> | null`</td>
+      <td>—</td>
+      <td>**Required.** The currently selected option, or `null`</td>
+    </tr>
+    <tr>
+      <td>`onSelectedChange`</td>
+      <td>`(value: SelectionOption<T> | null) => void`</td>
+      <td>—</td>
+      <td>**Required.** Called when selection changes; receives `null` on deselect</td>
+    </tr>
+    <tr>
+      <td>`items`</td>
+      <td>`SelectionOption<T>[]`</td>
+      <td>—</td>
+      <td>**Required.** Full list of options to display</td>
+    </tr>
+    <tr>
+      <td>`open`</td>
+      <td>`boolean`</td>
+      <td>—</td>
+      <td>Controlled open state. Omit to let the component manage it</td>
+    </tr>
+    <tr>
+      <td>`onOpenChange`</td>
+      <td>`(open: boolean) => void`</td>
+      <td>—</td>
+      <td>Called whenever the dropdown opens or closes</td>
+    </tr>
+    <tr>
+      <td>`query`</td>
+      <td>`string`</td>
+      <td>—</td>
+      <td>Controlled search query. Omit for uncontrolled</td>
+    </tr>
+    <tr>
+      <td>`onQueryChange`</td>
+      <td>`(query: string) => void`</td>
+      <td>—</td>
+      <td>Called whenever the search input changes</td>
+    </tr>
+    <tr>
+      <td>`placeholder`</td>
+      <td>`string`</td>
+      <td>`"Search..."`</td>
+      <td>Placeholder text shown in the search input</td>
+    </tr>
+    <tr>
+      <td>`closeAfterSelect`</td>
+      <td>`boolean`</td>
+      <td>`false`</td>
+      <td>Close the dropdown immediately after an option is selected</td>
+    </tr>
+    <tr>
+      <td>`disableLocalFilter`</td>
+      <td>`boolean`</td>
+      <td>—</td>
+      <td>Skip client-side filtering. Use when items are already filtered server-side</td>
+    </tr>
+    <tr>
+      <td>`filterFn`</td>
+      <td>`(item: SelectionOption<T>, query: string) => boolean`</td>
+      <td>—</td>
+      <td>Custom filter predicate. Replaces the default case-insensitive label match</td>
+    </tr>
+    <tr>
+      <td>`isLoading`</td>
+      <td>`boolean`</td>
+      <td>`false`</td>
+      <td>Show the loading state in place of the option list</td>
+    </tr>
+    <tr>
+      <td>`emptyContent`</td>
+      <td>`ReactNode`</td>
+      <td>`"No results found."`</td>
+      <td>Content shown when no options match the query</td>
+    </tr>
+    <tr>
+      <td>`loadingContent`</td>
+      <td>`ReactNode`</td>
+      <td>Skeleton bar</td>
+      <td>Content shown in place of the list while `isLoading` is `true`</td>
+    </tr>
+    <tr>
+      <td>`renderOption`</td>
+      <td>`(option: SelectionOption<T>, selected: boolean) => ReactNode`</td>
+      <td>—</td>
+      <td>Custom renderer for each list item</td>
+    </tr>
+    <tr>
+      <td>`startAddon`</td>
+      <td>`ReactNode`</td>
+      <td>—</td>
+      <td>Leading addon rendered inside the input (e.g. a search icon)</td>
+    </tr>
+    <tr>
+      <td>`endAddon`</td>
+      <td>`ReactNode`</td>
+      <td>—</td>
+      <td>Trailing addon rendered inside the input (e.g. a clear button)</td>
+    </tr>
+  </tbody>
+</table>
+
+All `PopoverContent` props (`align`, `side`, `sideOffset`, etc.) are also accepted and forwarded to the dropdown.

@@ -2,6 +2,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 export type AsyncStatus = "idle" | "pending" | "success" | "error";
 
+/**
+ * Discriminated union for every possible state of an async operation.
+ * Narrow on `status` (or the boolean flags) to get typed `data` / `error` access.
+ */
 export type AsyncState<TData, TError> =
   | {
       status: "idle";
@@ -41,9 +45,13 @@ export type AsyncState<TData, TError> =
     };
 
 export type UseAsyncOptions<TData, TError, TArgs extends unknown[]> = {
+  /** The async function to run. Receives the same args passed to `execute`. */
   action: (...args: TArgs) => Promise<TData> | TData;
+  /** Called with the resolved value and original args on success. */
   onSuccess?: (data: TData, args: TArgs) => void;
+  /** Called with the thrown error and original args on failure. */
   onError?: (error: TError, args: TArgs) => void;
+  /** Called after every settled attempt regardless of outcome. */
   onSettled?: (
     data: TData | undefined,
     error: TError | undefined,
@@ -69,6 +77,14 @@ const IDLE_STATE = {
   isError: false,
 } as const;
 
+/**
+ * Wraps an async function with loading, success, and error state.
+ *
+ * - Stale responses are dropped — only the most-recent `execute` call can commit
+ *   state. Calling `execute` again while in-flight silently cancels the earlier one.
+ * - Callbacks are always fresh; no stale-closure risk without wrapping in `useCallback`.
+ * - `reset` cancels any in-flight request and returns to the `idle` state.
+ */
 export function useAsync<
   TData = unknown,
   TError = unknown,

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "use-debounce",
+  "type": "registry:hook",
+  "description": "A debounce hook that returns a stable { execute, cancel } object — safe to call without wrapping in useCallback",
+  "files": [
+    {
+      "type": "registry:hook",
+      "target": "hooks/use-debounce.ts",
+      "path": "src/registry/base/use-debounce/hooks/use-debounce.tsx",
+      "content": "import { useEffect, useMemo, useRef } from \"react\";\n\n/**\n * Returns a stable `{ execute, cancel }` object that debounces `callback` by\n * `delay` milliseconds.\n *\n * - `execute(...args)` — schedules `callback` to run after `delay` ms,\n *   resetting the timer on every call.\n * - `cancel()` — clears any pending invocation.\n *\n * The latest `callback` reference is always used — there is no need to wrap\n * the caller in `useCallback` to avoid stale closures.\n * The returned object is stable as long as `delay` does not change.\n *\n * @param callback - Function to debounce. Updated on every render via a ref.\n * @param delay - Debounce delay in milliseconds.\n */\nexport function useDebounce<Args extends unknown[], Return>(\n  callback: (...args: Args) => Return,\n  delay: number,\n) {\n  const callbackRef = useRef(callback);\n\n  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);\n\n  useEffect(() => {\n    callbackRef.current = callback;\n  }, [callback]);\n\n  useEffect(() => {\n    return () => {\n      if (timeoutRef.current) {\n        clearTimeout(timeoutRef.current);\n      }\n    };\n  }, []);\n\n  return useMemo(() => {\n    const debouncedFn = (...args: Args) => {\n      if (timeoutRef.current) {\n        clearTimeout(timeoutRef.current);\n      }\n      timeoutRef.current = setTimeout(() => {\n        callbackRef.current(...args);\n      }, delay);\n    };\n\n    const cancel = () => {\n      if (timeoutRef.current) {\n        clearTimeout(timeoutRef.current);\n        timeoutRef.current = null;\n      }\n    };\n    return { execute: debouncedFn, cancel };\n  }, [delay]);\n}\n"
+    }
+  ]
+}
