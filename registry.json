@@ -1,6 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
-  "homepage": "KaUI Shadcn Registry",
+  "name": "KaUI Shadcn Registry",
+  "homepage": "https://kaui-shadcn.vercel.app",
   "items": [
     {
       "name": "use-async",

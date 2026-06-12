@@ -19,8 +19,26 @@ export default defineConfig({
   integrations: [
     starlight({
       title: "KaUI",
-      favicon: "/favicon.ico",
-      head: [{ tag: "link", attrs: { rel: "icon", href: "/favicon.ico" } }],
+      favicon: "/favicon.svg",
+      head: [
+        {
+          tag: "link",
+          attrs: {
+            rel: "icon",
+            type: "image/svg+xml",
+            href: "/favicon.svg",
+          },
+        },
+        {
+          tag: "link",
+          attrs: {
+            rel: "icon",
+            type: "image/svg+xml",
+            href: "/favicon-dark.svg",
+            media: "(prefers-color-scheme: dark)",
+          },
+        },
+      ],
       customCss: ["./src/styles/global.css"],
       social: [
         {
@@ -47,6 +65,7 @@ export default defineConfig({
       components: {
         Head: "./src/components/override/head.astro",
         Banner: "./src/components/override/banner.astro",
+        Hero: "./src/components/override/hero.astro",
       },
 
       plugins: [

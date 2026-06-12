@@ -2,6 +2,8 @@
 dist/
 # generated types
 .astro/
+# generated registry JSON — rebuilt by `pnpm build:registry` before every build
+public/r/
 
 # dependencies
 node_modules/

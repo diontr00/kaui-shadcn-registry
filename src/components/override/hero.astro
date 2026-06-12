@@ -1,0 +1,166 @@
+---
+import { GITHUB_URL } from "astro:env/client";
+import { Toaster } from "@/components/ui/sonner";
+import { LandingShowcase } from "@/components/landing/showcase";
+---
+
+<div class="kaui-hero not-content">
+  <div class="kaui-head">
+    <a href="/get-started/introduction" class="kaui-badge">
+      shadcn/ui open registry <span aria-hidden="true">→</span>
+    </a>
+
+    <h1 id="_top" data-page-title>
+      Handy add-ons for<br />your design system
+    </h1>
+
+    <p>
+      A growing collection of components built on shadcn/ui.<br />
+    </p>
+
+    <div class="kaui-actions">
+      <a href="/get-started/introduction" class="kaui-cta-primary">
+        Browse Components →
+      </a>
+      <a
+        href={GITHUB_URL}
+        class="kaui-cta-secondary"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        GitHub ↗
+      </a>
+    </div>
+  </div>
+
+  <div class="kaui-showcase-outer">
+    <div class="kaui-showcase-wrap">
+      <LandingShowcase client:load />
+    </div>
+  </div>
+</div>
+
+<Toaster client:load />
+
+<style is:global>
+  /* Widen the content container only on the homepage */
+  :root:has(.kaui-hero) .sl-container {
+    max-width: min(72rem, 100%);
+  }
+</style>
+
+<style>
+  .kaui-hero {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+    padding-block: 3rem 5rem;
+  }
+
+  /* ── Headline ──────────────────────────────────────────── */
+  .kaui-head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .kaui-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    border-radius: 9999px;
+    border: 1px solid var(--sl-color-hairline);
+    padding: 0.25rem 0.875rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--sl-color-gray-2);
+    text-decoration: none;
+    transition:
+      border-color 150ms,
+      color 150ms;
+  }
+
+  .kaui-badge:hover {
+    border-color: var(--sl-color-gray-3);
+    color: var(--sl-color-white);
+    text-decoration: none;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--sl-color-white);
+  }
+
+  p {
+    font-size: clamp(0.9375rem, 2vw, 1.0625rem);
+    line-height: 1.65;
+    color: var(--sl-color-gray-2);
+    max-width: 44ch;
+  }
+
+  .kaui-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  .kaui-cta-primary {
+    display: inline-flex;
+    align-items: center;
+    background-color: var(--sl-color-white);
+    color: var(--sl-color-black);
+    border-radius: 0.5rem;
+    padding: 0.5625rem 1.375rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: opacity 150ms;
+  }
+
+  .kaui-cta-primary:hover {
+    opacity: 0.85;
+    text-decoration: none;
+  }
+
+  .kaui-cta-secondary {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--sl-color-hairline);
+    color: var(--sl-color-gray-2);
+    border-radius: 0.5rem;
+    padding: 0.5625rem 1.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition:
+      border-color 150ms,
+      color 150ms;
+  }
+
+  .kaui-cta-secondary:hover {
+    border-color: var(--sl-color-gray-3);
+    color: var(--sl-color-white);
+    text-decoration: none;
+  }
+
+  /* ── Showcase ──────────────────────────────────────────── */
+
+  /* Prevents horizontal scroll while keeping popovers unclipped */
+  .kaui-showcase-outer {
+    width: 100%;
+    overflow-x: clip;
+  }
+
+  /* Full-width breakout from the constrained sl-container */
+  .kaui-showcase-wrap {
+    width: 100vw;
+    margin-inline-start: calc((100% - 100vw) / 2);
+    padding-inline: max(1rem, calc((100vw - 72rem) / 2));
+  }
+</style>

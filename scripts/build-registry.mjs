@@ -74,4 +74,25 @@ for (const item of registry.items) {
   built++;
 }
 
+// Write the registry catalog at /r/registry.json.
+// This is the discovery endpoint the shadcn CLI reads for `list` and `search`.
+// Files are omitted — catalog entries must not include file content per the registry index spec.
+const catalog = {
+  $schema: "https://ui.shadcn.com/schema/registry.json",
+  name: registry.name,
+  homepage: registry.homepage,
+  items: registry.items.map(({ files: _files, ...item }) => ({
+    ...item,
+    registryDependencies: (item.registryDependencies ?? []).map(
+      resolveRegistryDep,
+    ),
+  })),
+};
+
+writeFileSync(
+  resolve(root, "public/r/registry.json"),
+  JSON.stringify(catalog, null, 2),
+);
+
+console.log(`  built → public/r/registry.json  (catalog)`);
 console.log(`\nregistry: ${built} item${built !== 1 ? "s" : ""} built`);
