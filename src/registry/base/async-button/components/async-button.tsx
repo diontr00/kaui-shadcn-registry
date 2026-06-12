@@ -13,9 +13,18 @@ export type AsyncButtonProps<
   TArgs extends unknown[] = [],
 > = Omit<ComponentProps<typeof Button>, "onClick"> &
   UseAsyncOptions<TData, TError, TArgs> & {
+    /** Content displayed while the action is in flight. Defaults to `children` when omitted. */
     loadingText?: ReactNode;
   };
 
+/**
+ * A `Button` that manages its own async state.
+ *
+ * Disables itself while the action is in flight and swaps children for a spinner
+ * (+ optional `loadingText`) via an invisible overlay — the button width never shifts.
+ *
+ * **Required:** `action`
+ */
 export function AsyncButton<TData, TError, TArgs extends unknown[] = []>({
   action,
   loadingText,

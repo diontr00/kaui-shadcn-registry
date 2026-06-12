@@ -1,0 +1,189 @@
+---
+title: Multi Select
+description: A multi-select combobox that toggles values in and out of a selection array, with inline search and full controlled/uncontrolled API.
+sidebar:
+  order: 5
+---
+
+import CodePreview from "@/components/markdown/code-preview/code-preview.astro";
+import Installation from "@/components/markdown/installation-tabs/installation-tabs.astro";
+
+<CodePreview demo="multi-select/basic" />
+
+## Installation
+
+<Installation item="multi-select" />
+
+## Usage
+
+```tsx
+import { MultiSelect } from "@/components/ui/multi-select";
+import type { SelectionOption } from "@/hooks/use-filtered-options";
+```
+
+```tsx
+const options: SelectionOption<string>[] = [
+  { value: "react", label: "React" },
+  { value: "typescript", label: "TypeScript" },
+];
+
+<MultiSelect
+  items={options}
+  value={selected}
+  onValueChange={setSelected}
+  placeholder="Select skills..."
+/>;
+```
+
+Each option is `{ value: T, label: string, disabled?: boolean }`. The generic `T` extends `string` so values stay fully typed. `value` is always the complete current selection array — not a delta.
+
+## Examples
+
+### Count Badge and Clear All
+
+Use `endAddon` to show a live count of selected items alongside a clear-all button.
+
+<CodePreview demo="multi-select/with-count" />
+
+### Async Search
+
+Wire `onQueryChange` to a debounced fetch, set `disableLocalFilter`, and toggle `isLoading` during the request. The component renders a skeleton in place of the list until results land.
+
+<CodePreview demo="multi-select/async-search" />
+
+### Custom Option Rendering
+
+`renderOption` gives full control over each list item. Use it to add colored indicators, avatars, or secondary metadata. The selected pills below are built from the same data — no separate state needed.
+
+<CodePreview demo="multi-select/custom-render" />
+
+### Create New Option
+
+Use `emptyContent` with a controlled `query` to surface an inline "Add" action when nothing matches. `onMouseDown` on the button prevents the input blur that would otherwise close the dropdown before the click fires.
+
+<CodePreview demo="multi-select/create-option" />
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>`value`</td>
+      <td>`T[]`</td>
+      <td>—</td>
+      <td>**Required.** Controlled array of currently selected values</td>
+    </tr>
+    <tr>
+      <td>`onValueChange`</td>
+      <td>`(value: T[]) => void`</td>
+      <td>—</td>
+      <td>**Required.** Called with the full updated array after each toggle</td>
+    </tr>
+    <tr>
+      <td>`items`</td>
+      <td>`SelectionOption<T>[]`</td>
+      <td>—</td>
+      <td>**Required.** Full list of options to display</td>
+    </tr>
+    <tr>
+      <td>`open`</td>
+      <td>`boolean`</td>
+      <td>—</td>
+      <td>Controlled open state. Omit to let the component manage it</td>
+    </tr>
+    <tr>
+      <td>`onOpenChange`</td>
+      <td>`(open: boolean) => void`</td>
+      <td>—</td>
+      <td>Called whenever the dropdown opens or closes</td>
+    </tr>
+    <tr>
+      <td>`query`</td>
+      <td>`string`</td>
+      <td>—</td>
+      <td>Controlled search query. Omit for uncontrolled</td>
+    </tr>
+    <tr>
+      <td>`onQueryChange`</td>
+      <td>`(query: string) => void`</td>
+      <td>—</td>
+      <td>Called whenever the search input changes</td>
+    </tr>
+    <tr>
+      <td>`placeholder`</td>
+      <td>`string`</td>
+      <td>`"Search..."`</td>
+      <td>Placeholder text shown in the search input</td>
+    </tr>
+    <tr>
+      <td>`clearQueryOnSelect`</td>
+      <td>`boolean`</td>
+      <td>`true`</td>
+      <td>Clear the search query after each selection toggle</td>
+    </tr>
+    <tr>
+      <td>`closeAfterSelect`</td>
+      <td>`boolean`</td>
+      <td>`false`</td>
+      <td>Close the dropdown immediately after each selection toggle</td>
+    </tr>
+    <tr>
+      <td>`disableLocalFilter`</td>
+      <td>`boolean`</td>
+      <td>`false`</td>
+      <td>Skip client-side filtering. Use when items are already filtered server-side</td>
+    </tr>
+    <tr>
+      <td>`filterFn`</td>
+      <td>`(item: SelectionOption<T>, query: string) => boolean`</td>
+      <td>—</td>
+      <td>Custom filter predicate. Replaces the default case-insensitive label match</td>
+    </tr>
+    <tr>
+      <td>`isLoading`</td>
+      <td>`boolean`</td>
+      <td>—</td>
+      <td>Show the loading state in place of the option list</td>
+    </tr>
+    <tr>
+      <td>`emptyContent`</td>
+      <td>`ReactNode`</td>
+      <td>`"No results found"`</td>
+      <td>Content shown when no options match the query</td>
+    </tr>
+    <tr>
+      <td>`loadingContent`</td>
+      <td>`ReactNode`</td>
+      <td>Skeleton bar</td>
+      <td>Content shown in place of the list while `isLoading` is `true`</td>
+    </tr>
+    <tr>
+      <td>`renderOption`</td>
+      <td>`(option: SelectionOption<T>, selected: boolean) => ReactNode`</td>
+      <td>—</td>
+      <td>Custom renderer for each list item</td>
+    </tr>
+    <tr>
+      <td>`startAddon`</td>
+      <td>`ReactNode`</td>
+      <td>—</td>
+      <td>Leading addon rendered inside the input (e.g. a search icon)</td>
+    </tr>
+    <tr>
+      <td>`endAddon`</td>
+      <td>`ReactNode`</td>
+      <td>—</td>
+      <td>Trailing addon rendered inside the input (e.g. a count badge or clear button)</td>
+    </tr>
+  </tbody>
+</table>
+
+All `PopoverContent` props (`align`, `side`, `sideOffset`, etc.) are also accepted and forwarded to the dropdown.

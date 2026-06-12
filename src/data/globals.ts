@@ -68,4 +68,44 @@ export const demos = {
     () => import("@/registry/examples/confirm-action/with-media"),
     "WithMediaConfirmAction",
   ),
+  "combobox/basic": lazyNamed(
+    () => import("@/registry/examples/combobox/basic"),
+    "BasicCombobox",
+  ),
+  "combobox/with-addons": lazyNamed(
+    () => import("@/registry/examples/combobox/with-addons"),
+    "ComboboxWithAddons",
+  ),
+  "combobox/async-search": lazyNamed(
+    () => import("@/registry/examples/combobox/async-search"),
+    "AsyncSearchCombobox",
+  ),
+  "combobox/custom-render": lazyNamed(
+    () => import("@/registry/examples/combobox/custom-render"),
+    "CustomRenderCombobox",
+  ),
+  "combobox/create-option": lazyNamed(
+    () => import("@/registry/examples/combobox/create-option"),
+    "CreatableCombobox",
+  ),
+  "multi-select/basic": lazyNamed(
+    () => import("@/registry/examples/multi-select/basic"),
+    "BasicMultiSelect",
+  ),
+  "multi-select/with-count": lazyNamed(
+    () => import("@/registry/examples/multi-select/with-count"),
+    "MultiSelectWithCount",
+  ),
+  "multi-select/async-search": lazyNamed(
+    () => import("@/registry/examples/multi-select/async-search"),
+    "AsyncSearchMultiSelect",
+  ),
+  "multi-select/custom-render": lazyNamed(
+    () => import("@/registry/examples/multi-select/custom-render"),
+    "CustomRenderMultiSelect",
+  ),
+  "multi-select/create-option": lazyNamed(
+    () => import("@/registry/examples/multi-select/create-option"),
+    "CreatableMultiSelect",
+  ),
 } satisfies Record<AvailableDemo, LazyExoticComponent<ComponentType<any>>>;

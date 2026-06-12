@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "use-controlled-state",
+  "type": "registry:hook",
+  "description": "Uncontrolled/controlled state bridge — use like useState but accepts optional value and onChange props for full controlled mode support",
+  "files": [
+    {
+      "type": "registry:hook",
+      "target": "hooks/use-controlled-state.ts",
+      "path": "src/registry/base/use-controlled-state/hooks/use-controlled-state.ts",
+      "content": "import { useCallback, useState } from \"react\";\n\ntype UseControlledStateProps<T> = {\n  /**\n   * Controlled value. When provided the component is in controlled mode and\n   * internal state is ignored. Pass `undefined` for uncontrolled mode.\n   */\n  value?: T;\n  /** Initial value used when the component is uncontrolled. */\n  defaultValue: T;\n  /** Called whenever the value changes, regardless of controlled/uncontrolled mode. */\n  onChange?: (value: T) => void;\n};\n\n/**\n * Bridges controlled and uncontrolled state in a single hook.\n *\n * Returns `[state, setState]` like `useState`. When `value` is provided the\n * hook operates in controlled mode — `setState` calls `onChange` but does not\n * touch internal state. When `value` is `undefined` the hook manages its own\n * state and still calls `onChange` on every change.\n *\n * @example\n * // Uncontrolled (component owns the state)\n * const [open, setOpen] = useControlledState({ defaultValue: false });\n *\n * // Controlled (parent owns the state)\n * const [open, setOpen] = useControlledState({ value: props.open, defaultValue: false, onChange: props.onOpenChange });\n */\nexport function useControlledState<T>({\n  value,\n  defaultValue,\n  onChange,\n}: UseControlledStateProps<T>) {\n  const [internalValue, setInternalValue] = useState<T>(defaultValue);\n\n  const isControlled = value !== undefined;\n  const state = isControlled ? value : internalValue;\n  const setState = useCallback(\n    (next: T) => {\n      if (!isControlled) {\n        setInternalValue(next);\n      }\n      onChange?.(next);\n    },\n    [isControlled, onChange],\n  );\n  return [state, setState] as const;\n}\n"
+    }
+  ]
+}

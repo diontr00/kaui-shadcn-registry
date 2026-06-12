@@ -2,7 +2,12 @@ export type AvailableComponent =
   | "use-async"
   | "async-button"
   | "async-scope"
-  | "confirm-action";
+  | "confirm-action"
+  | "use-debounce"
+  | "use-controlled-state"
+  | "use-filtered-options"
+  | "combobox"
+  | "multi-select";
 
 export type AvailableDemo =
   | "async-button/basic"
@@ -15,7 +20,17 @@ export type AvailableDemo =
   | "confirm-action/on-success"
   | "confirm-action/on-error"
   | "confirm-action/custom-trigger"
-  | "confirm-action/with-media";
+  | "confirm-action/with-media"
+  | "combobox/basic"
+  | "combobox/with-addons"
+  | "combobox/async-search"
+  | "combobox/custom-render"
+  | "combobox/create-option"
+  | "multi-select/basic"
+  | "multi-select/with-count"
+  | "multi-select/async-search"
+  | "multi-select/custom-render"
+  | "multi-select/create-option";
 
 export type RegistryFileType =
   | "registry:lib"
