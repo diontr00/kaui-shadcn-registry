@@ -70,6 +70,10 @@
     "vite": "^6.3.6"
   },
   "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp"
+    ],
     "overrides": {
       "vite": "^6"
     }
