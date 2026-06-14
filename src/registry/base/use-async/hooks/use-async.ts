@@ -63,7 +63,20 @@ export type UseAsyncReturn<TData, TError, TArgs extends unknown[]> = AsyncState<
   TData,
   TError
 > & {
-  execute: (...args: TArgs) => Promise<TData>;
+  /**
+   * Run the action and await the result , even though side effect can be dispatch with onError ,
+   * but it will **Reject on failure** for imperative error handling
+   * Use when the next step depends on the  outcome (sequencing , guarded , navigation) or your own
+   * try/catch , Mirrors Tanstack `mutateAsync`
+   */
+  executeAsync: (...args: TArgs) => Promise<TData>;
+  /**
+   * Fire and Forget , **It never reject** , error handling can be listen declaratively with
+   * sideEfect with onError
+   * Use when the action is the end of the story (e.g a button that just shows success/error).
+   * Mirror Tanstack `mutate`
+   */
+  execute: (...args: TArgs) => void;
   reset: () => void;
 };
 
@@ -112,7 +125,7 @@ export function useAsync<
     };
   }, []);
 
-  const execute = useCallback(async (...args: TArgs): Promise<TData> => {
+  const executeAsync = useCallback(async (...args: TArgs): Promise<TData> => {
     // Tăng trước khi đọc
     const requestId = ++requestIdRef.current;
     const { action, onSuccess, onError, onSettled } = optionsRef.current;
@@ -162,6 +175,16 @@ export function useAsync<
     }
   }, []);
 
+  const execute = useCallback(async (...args: TArgs) => {
+    // Fire-and-forget: errors are already committed to state and passed to
+    // onError inside executeAsync, so we swallow the rejection here to spare
+    // callers from having to .catch. This is what makes execute "never reject".
+    try {
+      const data = await executeAsync(...args);
+      return data;
+    } catch {}
+  }, []);
+
   const reset = useCallback(() => {
     requestIdRef.current++;
     if (mountedRef.current) {
@@ -169,5 +192,5 @@ export function useAsync<
     }
   }, []);
 
-  return { ...state, execute, reset };
+  return { ...state, execute, executeAsync, reset };
 }

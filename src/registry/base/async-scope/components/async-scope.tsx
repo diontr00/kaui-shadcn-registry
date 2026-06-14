@@ -20,6 +20,14 @@ const AsyncScopeContext = createContext<UseAsyncReturn<
   []
 > | null>(null);
 
+/**
+ * Read the async state from the nearest `AsyncScope`.
+ *
+ * ⚠️ The `TData` / `TError` generics are an **assertion, not a guarantee**.
+ * Context can't infer them across the provider boundary, so you must pass the
+ * same types the enclosing `<AsyncScope action={...}>` actually produces.
+ * Mismatched generics compile cleanly but are wrong at runtime.
+ */
 export function useAsyncScope<
   TData = unknown,
   TError = unknown,
