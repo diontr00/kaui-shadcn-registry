@@ -11,6 +11,7 @@ export default {
         "chore",
         "refactor",
         "ci",
+        "test",
         "build",
         "perf",
         "revert",
