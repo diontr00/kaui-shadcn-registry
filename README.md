@@ -44,9 +44,11 @@ pnpm dlx shadcn@latest add https://kaui-shadcn-registry.vercel.app/r/<name>.json
 Or register the namespace once and use the short form:
 
 ```bash
-pnpm dlx shadcn@latest registry add @kaui "https://kaui-shadcn-registry.vercel.app/r/{name}.json"
+pnpm dlx shadcn@latest registry add @kaui="https://kaui-shadcn-registry.vercel.app/r/{name}.json"
 pnpm dlx shadcn@latest add @kaui/async-button
 ```
+
+The time it take to get approve to index is longer than expected , after it got merged , you will be to use namespace directly
 
 ## Components
 
