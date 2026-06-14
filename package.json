@@ -9,6 +9,7 @@
     "build": "astro build",
     "prebuild": "pnpm run build:registry",
     "preview": "astro preview",
+    "test": "vitest run",
     "astro": "astro",
     "check": "astro check",
     "format": "prettier --write .",
@@ -60,14 +61,18 @@
     "@commitlint/cli": "^21.0.2",
     "@commitlint/config-conventional": "^21.0.2",
     "@commitlint/cz-commitlint": "^21.0.2",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/react": "^16.3.2",
     "commitizen": "^4.3.1",
     "cz-emoji": "1.3.2-canary.2",
     "husky": "^9.1.7",
+    "jsdom": "^29.1.1",
     "lint-staged": "^17.0.7",
     "prettier": "^3.8.3",
     "prettier-plugin-astro": "^0.14.1",
     "typescript": "^6.0.3",
-    "vite": "^7.3.2"
+    "vite": "^7.3.2",
+    "vitest": "^4.1.8"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
