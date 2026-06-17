@@ -48,7 +48,9 @@ export function ConfirmAction<TData = unknown, TError = unknown>({
   onSuccess,
   onError,
   onSettled,
+
   children,
+  ...props
 }: ConfirmActionProps<TData, TError>) {
   const [open, setOpen] = useState(false);
 
@@ -75,6 +77,7 @@ export function ConfirmAction<TData = unknown, TError = unknown>({
             }}
             onError={onError}
             onSettled={onSettled}
+            {...props}
           >
             {confirmText}
           </AsyncButton>

@@ -15,6 +15,7 @@ export type AsyncButtonProps<
   UseAsyncOptions<TData, TError, TArgs> & {
     /** Content displayed while the action is in flight. Defaults to `children` when omitted. */
     loadingText?: ReactNode;
+    preventDefault?: boolean;
   };
 
 /**
@@ -33,6 +34,7 @@ export function AsyncButton<TData, TError, TArgs extends unknown[] = []>({
   onSettled,
   children,
   disabled,
+  preventDefault = false,
   className,
   ...props
 }: AsyncButtonProps<TData, TError, TArgs>) {
@@ -49,7 +51,12 @@ export function AsyncButton<TData, TError, TArgs extends unknown[] = []>({
     <Button
       {...props}
       disabled={disabled || isLoading}
-      onClick={() => (execute as () => Promise<TData>)()}
+      onClick={(e) => {
+        if (preventDefault) {
+          e.preventDefault();
+        }
+        (execute as () => Promise<TData>)();
+      }}
       className={cn("grid grid-cols-1 place-items-center", className)}
     >
       <div
