@@ -7,7 +7,8 @@ export type AvailableComponent =
   | "use-controlled-state"
   | "use-filtered-options"
   | "combobox"
-  | "multi-select";
+  | "multi-select"
+  | "password-input";
 
 export type AvailableDemo =
   | "async-button/basic"
@@ -30,7 +31,12 @@ export type AvailableDemo =
   | "multi-select/with-count"
   | "multi-select/async-search"
   | "multi-select/custom-render"
-  | "multi-select/create-option";
+  | "multi-select/create-option"
+  | "password-input/basic"
+  | "password-input/with-rules"
+  | "password-input/with-form"
+  | "password-input/with-custom-options"
+  | "password-input/advanced";
 
 export type RegistryFileType =
   | "registry:lib"
