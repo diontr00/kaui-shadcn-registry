@@ -6,34 +6,7 @@ description: How to add KaUI components to your project using the shadcn CLI.
 import CliCommandCode from "@/components/markdown/cli-command-code/cli-command-code.astro";
 import { URL } from "astro:env/client";
 
-KaUI components are installed the same way as any shadcn component — using the `shadcn` CLI. No extra setup needed if you already have shadcn/ui configured.
-
-### First Step
-
-It's take longer than expect for my registry to be added to shadcn index. Before it's got publish , unfortunately you will have to either
-
-With long json form
-
-<CliCommandCode
-  action="run"
-  command="shadcn@latest add
-https://kaui-registry.vercel.app/r/{component-name}.json"
-/>
-
-Or register **@kaui** as namespace one and use the short long
-
-<CliCommandCode
-  action="run"
-  command='pnpm dlx shadcn@latest registry add @kaui="https://kaui-shadcn-registry.vercel.app/r/{name}.json"'
-/>
-
-This command will registry the namespace for your project and from now on , component can be add with
-
-<CliCommandCode action="run" command="shadcn@latest add @kaui/async-button" />
-
-### Note
-
-You can view my <a href="https://github.com/shadcn-ui/ui/pull/10929">Open Pull Request</a> to see the progress, sorry for the unconvinience
+KaUI components are installed the same way as any shadcn component with the `shadcn` CLI or with direct URL
 
 ## Adding a component
 

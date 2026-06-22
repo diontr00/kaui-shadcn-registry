@@ -112,6 +112,20 @@
       ]
     },
     {
+      "name": "input-group",
+      "type": "registry:component",
+      "description": "Compose inputs with inline addons, buttons, and labels in a styled container",
+      "dependencies": ["class-variance-authority"],
+      "registryDependencies": ["utils", "input", "button", "textarea"],
+      "files": [
+        {
+          "path": "src/components/ui/input-group.tsx",
+          "type": "registry:component",
+          "target": "components/ui/input-group.tsx"
+        }
+      ]
+    },
+    {
       "name": "multi-select",
       "type": "registry:component",
       "description": "A multi-select combobox with inline search, toggle-based selection, and full controlled/uncontrolled API",
@@ -134,6 +148,26 @@
           "path": "src/registry/base/use-filtered-options/hooks/use-filtered-options.ts",
           "type": "registry:hook",
           "target": "hooks/use-filtered-options.ts"
+        }
+      ]
+    },
+    {
+      "name": "password-input",
+      "type": "registry:component",
+      "description": "A password input with show/hide toggle and an optional strength indicator",
+      "dependencies": [
+        "@zxcvbn-ts/core",
+        "@zxcvbn-ts/language-common",
+        "@zxcvbn-ts/language-en",
+        "@zxcvbn-ts/language-de",
+        "lucide-react"
+      ],
+      "registryDependencies": ["utils", "@kaui/input-group"],
+      "files": [
+        {
+          "path": "src/registry/base/password-input/components/password-input.tsx",
+          "type": "registry:component",
+          "target": "components/ui/password-input.tsx"
         }
       ]
     }

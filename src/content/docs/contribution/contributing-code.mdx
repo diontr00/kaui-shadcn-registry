@@ -1,0 +1,98 @@
+---
+title: Contributing
+description: How to contribute to KaUI
+---
+
+import { GITHUB_URL } from "astro:env/client";
+
+KaUI is a personal collection, so contributions follow the same bar the existing components have to clear. The easiest way to contribute is to fix something that's broken. New components are welcome too, but they need to make sense as reusable pieces, not solutions to one-off problems. When in doubt, <a href={`${GITHUB_URL}/issues`}>open an issue</a> first.
+
+## Setting up
+
+```bash
+pnpm install
+pnpm dev     # docs site at localhost:4321
+```
+
+## Branches
+
+Never commit directly to `main`. Branch names follow this pattern:
+
+<table>
+  <thead>
+    <tr>
+      <th>Prefix</th>
+      <th>When to use</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>feat/&lt;name&gt;</code>
+      </td>
+      <td>New component, hook, or feature</td>
+    </tr>
+    <tr>
+      <td>
+        <code>fix/&lt;scope&gt;</code>
+      </td>
+      <td>Bug fix</td>
+    </tr>
+    <tr>
+      <td>
+        <code>docs/&lt;scope&gt;</code>
+      </td>
+      <td>Documentation only</td>
+    </tr>
+    <tr>
+      <td>
+        <code>chore/&lt;scope&gt;</code>
+      </td>
+      <td>Tooling, dependencies, config</td>
+    </tr>
+  </tbody>
+</table>
+
+## Commit messages
+
+Commits follow [Conventional Commits](https://www.conventionalcommits.org). The format is `type(scope): subject` , lowercase, imperative, no trailing period. The pre-commit hook validates this and will reject anything that doesn't match.
+
+```sh
+feat(password-input): add onScoreChange callback
+fix(async-button): prevent double-fire on rapid click
+docs(multi-select): add async search example
+```
+
+## Adding a new component
+
+Every component ships with five parts. All five are required before a PR is ready.
+
+**1. The component** : `src/registry/base/<name>/components/<name>.tsx`
+
+**2. Examples** : `src/registry/examples/<name>/<variant>.tsx`
+
+At least one example is required. Each example is a named export that renders the component in a realistic context. The filename becomes part of the demo key (`<name>/<variant>`).
+
+**3. Docs page** : `src/content/docs/components/<name>.mdx`
+
+Structure: live preview with `<CodePreview>`, install command with `<Installation>`, a usage block showing the import and a minimal render, then a props table. See any existing component page for the exact shape.
+
+**4. Registry entry** : `registry.json`
+
+Add an entry with `name`, `type`, `description`, `dependencies` (every npm package the component imports), `registryDependencies` (any other KaUI pieces it needs), and `files` pointing at the component source. Missing a dependency here means the shadcn CLI install will be broken for anyone who uses it.
+
+**5. Demo registration** : `src/data/types.ts` and `src/data/globals.ts`
+
+Add the component name to `AvailableComponent` and each demo key to `AvailableDemo` in `types.ts`. Add the corresponding lazy import in `globals.ts`. This is what wires the `<CodePreview>` tag on the docs page to the actual component.
+
+## Before opening a PR
+
+Run the type-check and make sure it exits clean:
+
+```bash
+pnpm astro check
+```
+
+Then open `pnpm dev` and verify the component renders correctly in the docs site. The `r/*.json` files under `r/` are generated at build time , don't edit them manually, they'll be overwritten.
+
+A PR is ready to merge when the type-check is clean, the component renders and behaves correctly in the docs site, and the docs page gives enough context to use the component without reading the source.

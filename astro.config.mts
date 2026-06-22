@@ -60,6 +60,20 @@ export default defineConfig({
           label: "Components",
           items: [{ autogenerate: { directory: "components" } }],
         },
+        {
+          label: "Contribution",
+          items: [
+            { label: "Introduction", slug: "contribution" },
+            {
+              label: "Component Request",
+              slug: "contribution/component-request",
+            },
+            {
+              label: "Contributing Code",
+              slug: "contribution/contributing-code",
+            },
+          ],
+        },
       ],
 
       components: {

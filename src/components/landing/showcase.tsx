@@ -19,6 +19,11 @@ import {
 import { ConfirmAction } from "@/registry/base/confirm-action/components/confirm-action";
 import { Combobox } from "@/registry/base/combobox/components/combobox";
 import { MultiSelect } from "@/registry/base/multi-select/components/multi-select";
+import {
+  PasswordInput,
+  PasswordInputRules,
+  PasswordInputStrengthChecker,
+} from "@/registry/base/password-input/components/password-input";
 import { Button } from "@/components/ui/button";
 import type { SelectionOption } from "@/registry/base/use-filtered-options/hooks/use-filtered-options";
 
@@ -266,6 +271,29 @@ function ConfirmActionCard() {
   );
 }
 
+// ─── Card: PasswordInput ─────────────────────────────────────────────────────
+
+const PASSWORD_RULES = [
+  { label: "At least 8 characters", test: (p: string) => p.length >= 8 },
+  { label: "One uppercase letter", test: (p: string) => /[A-Z]/.test(p) },
+  { label: "One number", test: (p: string) => /[0-9]/.test(p) },
+];
+
+function PasswordInputCard() {
+  return (
+    <Card
+      name="PasswordInput"
+      desc="Strength scoring and rule checklist"
+      className="sm:col-span-2"
+    >
+      <PasswordInput placeholder="Enter password">
+        <PasswordInputStrengthChecker />
+        <PasswordInputRules rules={PASSWORD_RULES} />
+      </PasswordInput>
+    </Card>
+  );
+}
+
 // ─── Shared Card wrapper ──────────────────────────────────────────────────────
 
 function Card({
@@ -303,6 +331,7 @@ export function LandingShowcase() {
         <AsyncButtonCard />
         <MultiSelectCard />
         <AsyncScopeCard />
+        <PasswordInputCard />
       </div>
 
       {/* Right: ConfirmAction spanning full height */}

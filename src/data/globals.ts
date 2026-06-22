@@ -108,4 +108,24 @@ export const demos = {
     () => import("@/registry/examples/multi-select/create-option"),
     "CreatableMultiSelect",
   ),
+  "password-input/basic": lazyNamed(
+    () => import("@/registry/examples/password-input/basic"),
+    "BasicPasswordInput",
+  ),
+  "password-input/with-rules": lazyNamed(
+    () => import("@/registry/examples/password-input/with-rules"),
+    "PasswordInputWithRules",
+  ),
+  "password-input/with-form": lazyNamed(
+    () => import("@/registry/examples/password-input/with-form"),
+    "PasswordInputWithForm",
+  ),
+  "password-input/with-custom-options": lazyNamed(
+    () => import("@/registry/examples/password-input/with-custom-options"),
+    "PasswordInputWithCustomOptions",
+  ),
+  "password-input/advanced": lazyNamed(
+    () => import("@/registry/examples/password-input/advanced"),
+    "AdvancedPasswordInput",
+  ),
 } satisfies Record<AvailableDemo, LazyExoticComponent<ComponentType<any>>>;

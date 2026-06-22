@@ -45,13 +45,13 @@ import {
 
 ### Error & Retry
 
-`useAsyncScope` gives child components direct access to the full async state — including `isError`, `reset`, and `execute`. This example uses all three to build a self-contained retry flow inside the card itself. The trigger is disabled during the retry so the user can't fire duplicate requests.
+`useAsyncScope` gives child components direct access to the full async state , including `isError`, `reset`, and `execute`. This example uses all three to build a self-contained retry flow inside the card itself. The trigger is disabled during the retry so the user can't fire duplicate requests.
 
 <CodePreview demo="async-scope/error-retry" />
 
 ### Status indicator
 
-Any component inside `AsyncScope` can subscribe to state — not just `AsyncContent`. Here a status badge lives outside the card entirely, reacting to `isIdle → isLoading → isSuccess | isError` without being part of the loading area.
+Any component inside `AsyncScope` can subscribe to state , not just `AsyncContent`. Here a status badge lives outside the card entirely, reacting to `isIdle → isLoading → isSuccess | isError` without being part of the loading area.
 
 <CodePreview demo="async-scope/with-status" />
 
@@ -97,21 +97,21 @@ Most apps have three distinct concerns when handling an async action. `AsyncScop
 
 ```
 ┌──────────────────────────────────────────────────────┐
-│  Data layer — TanStack Query, SWR, tRPC, fetch       │
+│  Data layer -> TanStack Query, SWR, tRPC, fetch       │
 │  Owns: caching, deduplication, background refetch    │
 ├──────────────────────────────────────────────────────┤
-│  State machine — useAsync                            │
+│  State machine -> useAsync                            │
 │  Owns: loading state, race protection, callbacks     │
 ├──────────────────────────────────────────────────────┤
-│  Coordination layer — AsyncScope           ← this    │
+│  Coordination layer -> AsyncScope           ← this    │
 │  Owns: broadcasting state to the component tree      │
 ├──────────────────────────────────────────────────────┤
-│  UI primitives — AsyncTrigger, AsyncContent          │
+│  UI primitives -> AsyncTrigger, AsyncContent          │
 │  Owns: rendering each state (idle/loading/error)     │
 └──────────────────────────────────────────────────────┘
 ```
 
-**`AsyncScope` is not a replacement for your data library.** It is a UI coordination layer — its only job is to take the result of an `action` and make the async state available to any component in its subtree. No caching, no deduplication, no background refetch.
+**`AsyncScope` is not a replacement for your data library.** It is a UI coordination layer , its only job is to take the result of an `action` and make the async state available to any component in its subtree. No caching, no deduplication, no background refetch.
 
 That means they compose. If you already use TanStack Query, pass `mutation.mutateAsync` as the `action`. TanStack Query owns the data layer; `AsyncScope` owns the coordination:
 
