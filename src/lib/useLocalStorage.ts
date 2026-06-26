@@ -8,7 +8,13 @@ export function useLocalStorage<T>(
 
   useEffect(() => {
     const item = window.localStorage.getItem(key);
-    if (item) setStoredValue(JSON.parse(item));
+    if (item) {
+      try {
+        setStoredValue(JSON.parse(item));
+      } catch {
+        setStoredValue(item as T);
+      }
+    }
   }, [key]);
 
   useEffect(() => {

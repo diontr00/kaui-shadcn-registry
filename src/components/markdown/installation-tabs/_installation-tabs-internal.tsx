@@ -1,5 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useLocalStorage } from "@/lib/useLocalStorage";
 import { type PropsWithChildren, type ReactNode } from "react";
 
 type Prop = PropsWithChildren & {

@@ -7,7 +7,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useLocalStorage } from "@/lib/useLocalStorage";
 import { CheckIcon, ClipboardIcon, TerminalIcon, XIcon } from "lucide-react";
 import { useState } from "react";
 
