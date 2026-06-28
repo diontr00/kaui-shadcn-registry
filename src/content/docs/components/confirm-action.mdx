@@ -36,7 +36,15 @@ import { ConfirmAction } from "@/components/ui/confirm-action";
 </ConfirmAction>
 ```
 
-The child element becomes the dialog trigger. Any clickable element works , a button, an icon, a menu item.
+The child element becomes the dialog trigger. Any clickable element works — a button, an icon, a menu item.
+
+When you need to open the dialog from outside the component tree (a dropdown item, a context menu, a table row action), omit `children` and drive the dialog with `open` + `onOpenChange` instead:
+
+```tsx
+const [open, setOpen] = useState(false);
+
+<ConfirmAction open={open} onOpenChange={setOpen} action={deleteItem} />;
+```
 
 ## Examples
 
@@ -64,6 +72,12 @@ Use `onSuccess` to access the data returned by `action` , useful for showing a c
 
 <CodePreview demo="confirm-action/on-error" />
 
+### Controlled
+
+When the trigger lives outside the component e.g a dropdown item, a context menu, a table row action , pass `open` and `onOpenChange` instead of `children`. The component becomes purely a dialog; you control when it opens.
+
+<CodePreview demo="confirm-action/controlled" />
+
 ## Props
 
 <table>
@@ -80,7 +94,19 @@ Use `onSuccess` to access the data returned by `action` , useful for showing a c
       <td>`children`</td>
       <td>`ReactNode`</td>
       <td>—</td>
-      <td>The trigger element that opens the dialog</td>
+      <td>Trigger element that opens the dialog. Omit when controlling `open` externally.</td>
+    </tr>
+    <tr>
+      <td>`open`</td>
+      <td>`boolean`</td>
+      <td>—</td>
+      <td>Controlled open state. Use when the trigger lives outside the component (dropdown item, context menu, table row action).</td>
+    </tr>
+    <tr>
+      <td>`onOpenChange`</td>
+      <td>`(open: boolean) => void`</td>
+      <td>—</td>
+      <td>Called when the dialog requests an open state change. Provide alongside `open` to manage the dialog externally.</td>
     </tr>
     <tr>
       <td>`action`</td>

@@ -22,6 +22,7 @@ export type AvailableDemo =
   | "confirm-action/on-error"
   | "confirm-action/custom-trigger"
   | "confirm-action/with-media"
+  | "confirm-action/controlled"
   | "combobox/basic"
   | "combobox/with-addons"
   | "combobox/async-search"

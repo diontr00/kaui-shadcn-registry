@@ -68,6 +68,10 @@ export const demos = {
     () => import("@/registry/examples/confirm-action/with-media"),
     "WithMediaConfirmAction",
   ),
+  "confirm-action/controlled": lazyNamed(
+    () => import("@/registry/examples/confirm-action/controlled"),
+    "ControlledConfirmAction",
+  ),
   "combobox/basic": lazyNamed(
     () => import("@/registry/examples/combobox/basic"),
     "BasicCombobox",

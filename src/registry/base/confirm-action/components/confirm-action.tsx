@@ -9,12 +9,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { type ComponentProps, type ReactNode, useState } from "react";
+import { type ComponentProps, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import {
   AsyncButton,
   type AsyncButtonProps,
 } from "../../async-button/components/async-button";
+import { useControlledState } from "../../use-controlled-state/hooks/use-controlled-state";
 
 interface ConfirmActionProps<TData = unknown, TError = unknown> extends Omit<
   AsyncButtonProps<TData, TError, []>,
@@ -27,7 +28,11 @@ interface ConfirmActionProps<TData = unknown, TError = unknown> extends Omit<
   confirmVariant?: ComponentProps<typeof Button>["variant"];
   size?: ComponentProps<typeof AlertDialogContent>["size"];
   media?: ReactNode;
-  children: ReactNode;
+  /** Controlled open state. Provide alongside `onOpenChange` to manage the dialog externally. */
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  /** Trigger element. Omit when controlling `open` externally. */
+  children?: ReactNode;
 }
 
 /**
@@ -48,15 +53,20 @@ export function ConfirmAction<TData = unknown, TError = unknown>({
   onSuccess,
   onError,
   onSettled,
-
+  open: openProp,
+  onOpenChange,
   children,
   ...props
 }: ConfirmActionProps<TData, TError>) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useControlledState({
+    value: openProp,
+    defaultValue: false,
+    onChange: onOpenChange,
+  });
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
-      <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
+      {children && <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>}
 
       <AlertDialogContent size={size}>
         <AlertDialogHeader>
