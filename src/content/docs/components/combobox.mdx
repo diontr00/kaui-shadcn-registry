@@ -64,6 +64,20 @@ Use `emptyContent` with a controlled `query` to show an inline "Add" action when
 
 <CodePreview demo="combobox/create-option" />
 
+### Grouped Options
+
+Pass a `ComboboxGroup<T>[]` to `items` to render options under labeled headings. Groups filter independently — a group is removed entirely if none of its items match the query. The flat `SelectionOption<T>[]` form still works as before.
+
+<CodePreview demo="combobox/grouped" />
+
+### Footer Item
+
+Pass `footerItem` to pin a persistent action at the bottom of the list. Unlike `emptyContent`, it is fully keyboard-navigable and always visible while the dropdown is open — regardless of whether results exist.
+
+The canonical use case is a server-search field where the user can either pick a suggestion or submit the raw typed phrase as a full-text search. Conditionally returning `undefined` when the query is empty keeps the item hidden until the user has typed something.
+
+<CodePreview demo="combobox/footer-item" />
+
 ## Props
 
 <table>
@@ -90,9 +104,9 @@ Use `emptyContent` with a controlled `query` to show an inline "Add" action when
     </tr>
     <tr>
       <td>`items`</td>
-      <td>`SelectionOption<T>[]`</td>
+      <td>`SelectionOption<T>[] \| ComboboxGroup<T>[]`</td>
       <td>—</td>
-      <td>**Required.** Full list of options to display</td>
+      <td>**Required.** Flat list of options, or grouped via `ComboboxGroup<T>` (`\{ label?: string; items: SelectionOption<T>[] \}`)</td>
     </tr>
     <tr>
       <td>`open`</td>
@@ -173,10 +187,28 @@ Use `emptyContent` with a controlled `query` to show an inline "Add" action when
       <td>Leading addon rendered inside the input (e.g. a search icon)</td>
     </tr>
     <tr>
+      <td>`disabled`</td>
+      <td>`boolean`</td>
+      <td>`false`</td>
+      <td>Disable the entire combobox — input is non-interactive and the dropdown cannot open</td>
+    </tr>
+    <tr>
+      <td>`clearable`</td>
+      <td>`boolean`</td>
+      <td>`false`</td>
+      <td>Show a built-in × button when an option is selected. Clears both the selection and the query.</td>
+    </tr>
+    <tr>
       <td>`endAddon`</td>
       <td>`ReactNode`</td>
       <td>—</td>
-      <td>Trailing addon rendered inside the input (e.g. a clear button)</td>
+      <td>Trailing addon rendered inside the input (e.g. a status indicator). Rendered alongside the `clearable` button when both are present.</td>
+    </tr>
+    <tr>
+      <td>`footerItem`</td>
+      <td>`\{ label: ReactNode; onSelect: () => void \}`</td>
+      <td>—</td>
+      <td>A persistent action pinned to the bottom of the list. Keyboard-navigable (arrow keys + Enter). Shown whenever the dropdown is open. Pass `undefined` conditionally to hide it.</td>
     </tr>
   </tbody>
 </table>

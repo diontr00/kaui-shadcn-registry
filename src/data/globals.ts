@@ -92,6 +92,14 @@ export const demos = {
     () => import("@/registry/examples/combobox/create-option"),
     "CreatableCombobox",
   ),
+  "combobox/footer-item": lazyNamed(
+    () => import("@/registry/examples/combobox/footer-item"),
+    "FooterItemCombobox",
+  ),
+  "combobox/grouped": lazyNamed(
+    () => import("@/registry/examples/combobox/grouped"),
+    "GroupedCombobox",
+  ),
   "multi-select/basic": lazyNamed(
     () => import("@/registry/examples/multi-select/basic"),
     "BasicMultiSelect",

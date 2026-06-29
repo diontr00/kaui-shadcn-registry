@@ -28,6 +28,8 @@ export type AvailableDemo =
   | "combobox/async-search"
   | "combobox/custom-render"
   | "combobox/create-option"
+  | "combobox/footer-item"
+  | "combobox/grouped"
   | "multi-select/basic"
   | "multi-select/with-count"
   | "multi-select/async-search"

@@ -1,6 +1,13 @@
-import { useCallback, type ComponentProps, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type ComponentProps,
+  type ReactNode,
+} from "react";
 import { Command as CommandPrimitive } from "cmdk";
-import { Check } from "lucide-react";
+import { Check, X } from "lucide-react";
 
 import {
   Popover,
@@ -18,25 +25,40 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
 import { useControlledState } from "../../use-controlled-state/hooks/use-controlled-state";
-import {
-  useFilteredOptions,
-  type SelectionOption,
-} from "../../use-filtered-options/hooks/use-filtered-options";
+import type { SelectionOption } from "../../use-filtered-options/hooks/use-filtered-options";
 import { useOptionMap } from "@/registry/base/combobox/hooks/use-option-map";
 import {
   InputGroup,
   InputGroupAddon,
+  InputGroupButton,
   InputGroupInput,
 } from "@/components/ui/input-group";
 
+export type ComboboxGroup<T extends string> = {
+  /** Optional heading rendered above this group of options. */
+  label?: string;
+  items: SelectionOption<T>[];
+};
+
+const FOOTER_ITEM_VALUE = "__kaui_combobox_footer__";
+
+function isGrouped<T extends string>(
+  items: SelectionOption<T>[] | ComboboxGroup<T>[],
+): items is ComboboxGroup<T>[] {
+  return items.length > 0 && "items" in (items[0] as object);
+}
+
 type ComboboxProps<T extends string> = {
-  /** The currently selected option, or `null` when nothing is selected. */
+  /** Currently selected option, or `null` when nothing is selected. */
   selected: SelectionOption<T> | null;
-  /** Called when the selection changes. Receives `null` when the active item is deselected. */
+  /** Called when the selection changes. Receives `null` on deselect. */
   onSelectedChange: (value: SelectionOption<T> | null) => void;
 
-  /** Full list of options to display. */
-  items: SelectionOption<T>[];
+  /**
+   * Options to display. Accepts a flat `SelectionOption<T>[]` or a
+   * `ComboboxGroup<T>[]` to render items under labeled headings.
+   */
+  items: SelectionOption<T>[] | ComboboxGroup<T>[];
   /**
    * Custom renderer for each list item.
    * Receives the option and a boolean indicating whether it is currently selected.
@@ -54,36 +76,37 @@ type ComboboxProps<T extends string> = {
   /** Called whenever the open state changes. */
   onOpenChange?: (open: boolean) => void;
 
-  /**
-   * Skip local filtering entirely.
-   * Use when `items` are already filtered server-side for the current query.
-   */
+  /** Skip client-side filtering. Use when items are already filtered server-side. */
   disableLocalFilter?: boolean;
-  /**
-   * Custom filter predicate. Receives each option and the current query string.
-   * Replaces the default case-insensitive label match when provided.
-   */
+  /** Custom filter predicate. Replaces the default case-insensitive label match. */
   filterFn?: (item: SelectionOption<T>, query: string) => boolean;
 
   /** Placeholder shown in the search input when empty. @default "Search..." */
   placeholder?: string;
   /** Content shown when no options match the current query. @default "No results found." */
   emptyContent?: ReactNode;
-  /**
-   * Content shown in place of the option list while `isLoading` is `true`.
-   * Defaults to a single skeleton bar.
-   */
+  /** Content shown in place of the option list while `isLoading` is `true`. Defaults to a skeleton bar. */
   loadingContent?: ReactNode;
 
-  /** Render the loading skeleton in place of the option list. @default false */
+  /** Show the loading state in place of the option list. @default false */
   isLoading?: boolean;
   /** Close the dropdown immediately after an option is selected. @default false */
   closeAfterSelect?: boolean;
+  /** Disable the entire combobox. @default false */
+  disabled?: boolean;
+  /** Show a built-in clear button when an option is selected. @default false */
+  clearable?: boolean;
 
   /** Content rendered as a leading addon inside the input (e.g. a search icon or label). */
   startAddon?: ReactNode;
-  /** Content rendered as a trailing addon inside the input (e.g. a clear button or badge). */
+  /** Content rendered as a trailing addon inside the input (e.g. a status indicator). */
   endAddon?: ReactNode;
+  /**
+   * A persistent CommandItem pinned to the bottom of the list.
+   * Fully keyboard-navigable (arrow keys + Enter) unlike emptyContent.
+   * Shown whenever the dropdown is open, regardless of whether items exist.
+   */
+  footerItem?: { label: ReactNode; onSelect: () => void };
 } & ComponentProps<typeof PopoverContent>;
 
 /**
@@ -91,8 +114,8 @@ type ComboboxProps<T extends string> = {
  *
  * **Required:** `selected`, `onSelectedChange`, `items`
  *
- * Supports controlled `open` and `query` state, async loading, custom option rendering,
- * and custom filtering. Embed icons or actions inside the input via `startAddon` / `endAddon`.
+ * Supports controlled `open` and `query` state, async loading, grouped options,
+ * custom option rendering, and custom filtering.
  */
 export function Combobox<T extends string>({
   selected,
@@ -110,8 +133,11 @@ export function Combobox<T extends string>({
   loadingContent,
   isLoading = false,
   closeAfterSelect = false,
+  disabled = false,
+  clearable = false,
   startAddon,
   endAddon,
+  footerItem,
   ...props
 }: ComboboxProps<T>) {
   const [query, setQuery] = useControlledState({
@@ -126,21 +152,47 @@ export function Combobox<T extends string>({
     onChange: onOpenChange,
   });
 
-  const optionMap = useOptionMap(items);
-  const filteredItems = useFilteredOptions({
-    items,
-    query,
-    filterFn,
-    disableLocalFilter,
-  });
+  // Controlled highlighted item — starts empty so the first item is not
+  // auto-focused when the dropdown opens. Resets on close so the next open
+  // is also clean.
+  const [highlightedValue, setHighlightedValue] = useState("");
+  useEffect(() => {
+    if (!open) setHighlightedValue("");
+  }, [open]);
+
+  const groups = useMemo(
+    (): ComboboxGroup<T>[] =>
+      !items.length
+        ? []
+        : isGrouped(items)
+          ? items
+          : [{ items: items as SelectionOption<T>[] }],
+    [items],
+  );
+
+  const allOptions = useMemo(() => groups.flatMap((g) => g.items), [groups]);
+  const optionMap = useOptionMap(allOptions);
+
+  const filteredGroups = useMemo((): ComboboxGroup<T>[] => {
+    if (disableLocalFilter || !query.trim()) return groups;
+    const pred =
+      filterFn ??
+      ((item: SelectionOption<T>, q: string) =>
+        item.label.toLowerCase().includes(q.toLowerCase()));
+    return groups
+      .map((g) => ({
+        ...g,
+        items: g.items.filter((item) => pred(item, query)),
+      }))
+      .filter((g) => g.items.length > 0);
+  }, [groups, query, disableLocalFilter, filterFn]);
+
+  const hasItems = filteredGroups.length > 0;
 
   const handleSelect = useCallback(
     (selectedValue: string) => {
       const option = optionMap.get(selectedValue as T);
-
-      if (!option) {
-        return;
-      }
+      if (!option) return;
 
       if (selected?.value === option.value) {
         onSelectedChange(null);
@@ -148,10 +200,7 @@ export function Combobox<T extends string>({
       } else {
         onSelectedChange(option);
         setQuery(option.label);
-
-        if (closeAfterSelect) {
-          setOpen(false);
-        }
+        if (closeAfterSelect) setOpen(false);
       }
     },
     [
@@ -164,19 +213,58 @@ export function Combobox<T extends string>({
     ],
   );
 
+  const handleClear = useCallback(() => {
+    onSelectedChange(null);
+    setQuery("");
+  }, [onSelectedChange, setQuery]);
+
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    if (e.relatedTarget?.hasAttribute("cmdk-list")) {
-      return;
-    }
-    if (selected) {
-      setQuery(selected.label);
-    }
+    if (e.relatedTarget?.hasAttribute("cmdk-list")) return;
+    if (selected) setQuery(selected.label);
   };
+
+  const renderItem = (item: SelectionOption<T>) => (
+    <CommandItem
+      key={item.value}
+      value={item.value}
+      disabled={item.disabled}
+      onSelect={handleSelect}
+      onMouseDown={(e) => e.preventDefault()}
+    >
+      {renderOption ? (
+        renderOption(item, selected?.value === item.value)
+      ) : (
+        <>
+          <Check
+            className={cn(
+              "mr-2 h-4 w-4",
+              selected?.value === item.value ? "opacity-100" : "opacity-0",
+            )}
+          />
+          {item.label}
+        </>
+      )}
+    </CommandItem>
+  );
+
+  const footerCommandItem = footerItem ? (
+    <CommandItem
+      value={FOOTER_ITEM_VALUE}
+      onSelect={footerItem.onSelect}
+      onMouseDown={(e) => e.preventDefault()}
+    >
+      {footerItem.label}
+    </CommandItem>
+  ) : null;
 
   return (
     <div data-slot="combobox-content" className="relative w-full">
       <Popover open={open} onOpenChange={setOpen}>
-        <Command shouldFilter={false}>
+        <Command
+          shouldFilter={false}
+          value={highlightedValue}
+          onValueChange={setHighlightedValue}
+        >
           <PopoverAnchor asChild>
             <InputGroup>
               {startAddon && (
@@ -188,8 +276,9 @@ export function Combobox<T extends string>({
                 asChild
                 value={query}
                 onValueChange={setQuery}
-                onMouseDown={() => setOpen(true)}
+                onMouseDown={() => !disabled && setOpen(true)}
                 onKeyDown={(e) => {
+                  if (disabled) return;
                   if (e.key === "Escape") {
                     if (open) {
                       setOpen(false);
@@ -204,12 +293,26 @@ export function Combobox<T extends string>({
               >
                 <InputGroupInput
                   placeholder={placeholder}
-                  onFocus={() => setOpen(true)}
+                  disabled={disabled}
+                  onFocus={() => !disabled && setOpen(true)}
                 />
               </CommandPrimitive.Input>
 
-              {endAddon && (
-                <InputGroupAddon align="inline-end">{endAddon}</InputGroupAddon>
+              {((clearable && !!selected) || !!endAddon) && (
+                <InputGroupAddon align="inline-end">
+                  {clearable && selected && (
+                    <InputGroupButton
+                      size="icon-xs"
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        handleClear();
+                      }}
+                    >
+                      <X className="size-3" />
+                    </InputGroupButton>
+                  )}
+                  {endAddon}
+                </InputGroupAddon>
               )}
             </InputGroup>
           </PopoverAnchor>
@@ -219,6 +322,7 @@ export function Combobox<T extends string>({
           <PopoverContent
             asChild
             className="w-(--radix-popover-trigger-width) p-0"
+            onOpenAutoFocus={(e) => e.preventDefault()}
             onInteractOutside={(e) => {
               if (
                 e.target instanceof Element &&
@@ -236,33 +340,22 @@ export function Combobox<T extends string>({
                     {loadingContent ?? <Skeleton className="h-6 w-full" />}
                   </div>
                 </CommandPrimitive.Loading>
-              ) : filteredItems.length > 0 ? (
-                <CommandGroup>
-                  {filteredItems.map((item) => (
-                    <CommandItem
-                      key={item.value}
-                      value={item.value}
-                      onSelect={handleSelect}
-                      onMouseDown={(e) => e.preventDefault()}
-                    >
-                      {renderOption ? (
-                        renderOption(item, selected?.value === item.value)
-                      ) : (
-                        <>
-                          <Check
-                            className={cn(
-                              "mr-2 h-4 w-4",
-                              selected?.value === item.value
-                                ? "opacity-100"
-                                : "opacity-0",
-                            )}
-                          />
-                          {item.label}
-                        </>
-                      )}
-                    </CommandItem>
+              ) : hasItems ? (
+                <>
+                  {filteredGroups.map((group, index) => (
+                    <CommandGroup key={index} heading={group.label}>
+                      {group.items.map(renderItem)}
+                    </CommandGroup>
                   ))}
-                </CommandGroup>
+                  {footerCommandItem && (
+                    <CommandGroup>{footerCommandItem}</CommandGroup>
+                  )}
+                </>
+              ) : footerItem ? (
+                <>
+                  <p className="py-6 text-center text-sm">{emptyContent}</p>
+                  <CommandGroup>{footerCommandItem}</CommandGroup>
+                </>
               ) : (
                 <CommandEmpty>{emptyContent}</CommandEmpty>
               )}
