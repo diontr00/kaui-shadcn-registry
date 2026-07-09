@@ -8,7 +8,7 @@ A personal shadcn/ui registry. Components and hooks I develop , use, packaged so
 
 This started as a place to stop copy-pasting the same async button between projects. It's grown from there. Every piece comes from real work: problems I kept solving the same way, patterns I wanted to own rather than depend on a library for.
 
-Because this is personal, the coverage is uneven. The async core has been through a lot. The newer stuff hasn't. If you use something and it breaks on a case I haven't hit, [open an issue](https://github.com/diontr00/kaui-shadcn-registry/issues) , that's would be very appreciate and how the collection will be improves.
+Because this is personal, the coverage is uneven. The async core has been through a lot. The newer stuff hasn't. If you use something and it breaks on a case I haven't hit, [open an issue](https://github.com/khanhanhtr00/kaui-shadcn-registry/issues) , that's would be very appreciate and how the collection will be improves.
 
 ## Components
 
